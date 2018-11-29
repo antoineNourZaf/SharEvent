@@ -1,0 +1,7 @@
+EndPoint - Sites 
+
+sharevent.com/signin
+sharevent.com/signup
+sharevent.com/user
+sharevent.com/event?id
+sharevent.com/home
