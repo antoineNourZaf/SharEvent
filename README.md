@@ -8,6 +8,8 @@
 
 | Endpoint                      | Description |
 | ----------------------------- | ----------- |
+| `sharevent.com`        		|             |
+| `sharevent.com/signin`        |             |
 | `sharevent.com/signup`        |             |
 | `sharevent.com/user/`         |             |
 | `sharevent.com/event/`        |             |
