@@ -5,4 +5,7 @@ sharevent.com/signup
 sharevent.com/user/
 sharevent.com/event/
 sharevent.com/home
-sharevent.com/search
+sharevent.com/search/top
+sharevent.com/search/users
+sharevent.com/search/events
+
