@@ -30,6 +30,8 @@
 | `/api/users?user={User}`       | `POST`       | crée un créateur |
 | `/api/events?event={Event}`    | `POST`       | crée un événement |
 | `/api/tags?tag={string}`       | `POST`       | crée un événement |
+| `/api/action?{id}`       | `POST`       | crée un événement |
 
 /api/users?orderBy=[location,]			 	(tous les users triés par lieu )
 /api/events?orderBy=[date,]&filter=[ska,] 		(tous les events liés au tag ska triés par date)
+
