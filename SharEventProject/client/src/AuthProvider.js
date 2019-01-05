@@ -39,7 +39,7 @@ class AuthProvider extends Component {
 
   signIn = ({ username, password }) => {
     // Implement me !
-    axios.post('https://fast-refuge-14566.herokuapp.com/login', { username, password })
+    axios.post('https://fast-refuge-14566.herokuapp.com/auth/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
