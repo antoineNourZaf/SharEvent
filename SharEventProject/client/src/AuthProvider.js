@@ -21,7 +21,7 @@ class AuthProvider extends Component {
   componentDidMount() {
     const token = window.localStorage.getItem('token');
     if (token) {
-      axios.get('/api/me', {
+      axios.get('https://fast-refuge-14566.herokuapp.com/', {
         headers: {
           Authorization: `bearer ${token}`,
         }
@@ -39,7 +39,7 @@ class AuthProvider extends Component {
 
   signIn = ({ username, password }) => {
     // Implement me !
-    axios.post('/auth/login', { username, password })
+    axios.post('https://fast-refuge-14566.herokuapp.com/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
