@@ -41,6 +41,7 @@ class AuthProvider extends Component {
   signIn = ({ username, password }) => {
     // Implement me !
     console.log("TRYING TO POST");
+    console.log("USER: " + username + ", PASS: " + password)
     axios.post('/auth/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
