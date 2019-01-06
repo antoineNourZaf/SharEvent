@@ -24,7 +24,7 @@ class AuthProvider extends Component {
       axios.get('/api/me', {
         headers: {
           Authorization: `bearer ${token}`,
-          Accept: `https://fast-refuge-14566.herokuapp.com/`,
+          Accept: `https://fast-refuge-14566.herokuapp.com`,
         }
       })
         .then(response => {
