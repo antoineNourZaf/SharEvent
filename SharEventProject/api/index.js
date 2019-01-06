@@ -20,7 +20,7 @@ app.use((err, req, res, next) => {
   res.append('Access-Control-Allow-Origin', ['*']);
   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
-  res.append('Content-Type': 'text/plain;charset=utf-8');
+  res.append('Content-Type', 'text/plain;charset=utf-8');
   next();
   console.error(err);
   res.status(500).send('Something went wrong!');

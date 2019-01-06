@@ -48,7 +48,7 @@ class AuthProvider extends Component {
     }
     console.log("TRYING TO POST");
     console.log("USER: " + username + ", PASS: " + password)
-    axios.post('/auth/login', { username, password }, {headers: headers})
+    axios.post('https://fast-refuge-14566.herokuapp.com/auth/login', { username, password }, {headers: headers})
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
