@@ -45,8 +45,10 @@ class AuthProvider extends Component {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
         this.setState({ user });
+        console.log("SENDING FROM CLIENT");
       })
       .catch(error => {
+        console.log("FUCKKKKKK");
         console.error(error);
         this.setState({ error: 'Invalid username or password' });
       })

@@ -20,10 +20,11 @@ const authentication = (req, res, next) => {
   res.append('Access-Control-Allow-Origin', ['*']);
   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
-  next();
+  console.log("MAYBE THIS IS DONE");
   return passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) { next(err) }
     req.user = user || null;
+    console.log("USER: " + req.user);
     next();
   })(req, res, next);
 }
