@@ -48,6 +48,11 @@ passport.use(new JWTStrategy(
 router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
   const { password, ...user } = req.user;
   const token = jwt.sign({ userId: user.id }, jwtOptions.secret);
+  res.set({
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+  });
   res.send({ user, token });
 });
 
