@@ -40,6 +40,7 @@ class AuthProvider extends Component {
 
   signIn = ({ username, password }) => {
     // Implement me !
+    console.log("TRYING TO POST");
     axios.post('/auth/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
@@ -48,7 +49,6 @@ class AuthProvider extends Component {
         console.log("SENDING FROM CLIENT");
       })
       .catch(error => {
-        console.log("FUCKKKKKK");
         console.error(error);
         this.setState({ error: 'Invalid username or password' });
       })
