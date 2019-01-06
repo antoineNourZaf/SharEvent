@@ -54,8 +54,9 @@ router.post('/login', passport.authenticate('local', { session: false }), (req, 
   console.log("TOKEN: " + token)
   res.set({
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT',
-    'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+    'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+    'Content-Type': 'text/plain;charset=utf-8'
   });
   console.log("SENDING FROM SERVER")
   res.send({ user, token });

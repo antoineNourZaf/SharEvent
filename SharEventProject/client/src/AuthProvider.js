@@ -43,7 +43,8 @@ class AuthProvider extends Component {
     const headers = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT',
-      'Access-Control-Allow-Headers': 'Content-Type,Authorization'
+      'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+      'Content-Type': 'text/plain;charset=utf-8'
     }
     console.log("TRYING TO POST");
     console.log("USER: " + username + ", PASS: " + password)
