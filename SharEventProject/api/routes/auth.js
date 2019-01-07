@@ -47,18 +47,18 @@ passport.use(new JWTStrategy(
 ));
 
 router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
-  console.log("RECEIVING INTO SERVER")
+  // console.log("RECEIVING INTO SERVER")
   const { password, ...user } = req.user;
-  console.log("REQUEST")
+  // console.log("REQUEST")
   const token = jwt.sign({ userId: user.id }, jwtOptions.secret);
-  console.log("TOKEN: " + token)
-  res.set({
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-    'Content-Type': 'text/plain;charset=utf-8'
-  });
-  console.log("SENDING FROM SERVER")
+  // console.log("TOKEN: " + token)
+  // res.set({
+  //   'Access-Control-Allow-Origin': '*',
+  //   'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT,OPTIONS',
+  //   'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+  //   'Content-Type': 'text/plain;charset=utf-8'
+  // });
+  // console.log("SENDING FROM SERVER")
   res.send({ user, token });
 });
 
