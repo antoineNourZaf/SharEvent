@@ -23,7 +23,6 @@ passport.use(new LocalStrategy(
     passwordField: 'password',
   },
   (username, password, done) => {
-    console.log("DO I CHECK USER?");
     // here you should make a database call
     if (username === USER.username && password === USER.password) {
       return done(null, USER);
@@ -55,7 +54,6 @@ router.post('/login', passport.authenticate('local', { session: false }), (req, 
     'Access-Control-Allow-Headers': 'Content-Type,Authorization',
     'Content-Type': 'text/plain;charset=utf-8'
   });
-  console.log("SENDING FROM SERVER")
   res.send({ user, token });
 });
 

@@ -17,15 +17,9 @@ const authenticationRequired = passport.authenticate('jwt', { session: false });
  * see: http://www.passportjs.org/docs/authenticate/#custom-callback
  */
 const authentication = (req, res, next) => {
-  res.append('Access-Control-Allow-Origin', ['*']);
-  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.append('Access-Control-Allow-Headers', 'Content-Type');
-  res.append('Content-Type', 'text/plain;charset=utf-8');
-  console.log("MAYBE THIS IS DONE");
   return passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) { next(err) }
     req.user = user || null;
-    console.log("USER: " + req.user);
     next();
   })(req, res, next);
 }
