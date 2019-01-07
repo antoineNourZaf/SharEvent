@@ -47,8 +47,8 @@ class AuthProvider extends Component {
     //   'Content-Type': 'text/plain;charset=utf-8'
     // }
     // console.log("TRYING TO POST");
-    // console.log("USER: " + username + ", PASS: " + password)
-    axios.post('https://fast-refuge-14566.herokuapp.com/auth/login', { username, password }, {headers: headers})
+    // console.log("USER: " + username + ", PASS: " + password) , {headers: headers}
+    axios.post('https://fast-refuge-14566.herokuapp.com/auth/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
