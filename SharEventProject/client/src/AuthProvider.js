@@ -40,20 +40,20 @@ class AuthProvider extends Component {
 
   signIn = ({ username, password }) => {
     // Implement me !
-    // const headers = {
-    //   'Access-Control-Allow-Origin': '*',
-    //   'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT',
-    //   'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-    //   'Content-Type': 'text/plain;charset=utf-8'
-    // }
-    // console.log("TRYING TO POST");
-    // console.log("USER: " + username + ", PASS: " + password) , {headers: headers}
-    axios.post('https://fast-refuge-14566.herokuapp.com/auth/login', { username, password })
+    const headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'DELETE,GET,PATCH,POST,PUT',
+      'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+      'Content-Type': 'text/plain;charset=utf-8'
+    }
+    console.log("TRYING TO POST");
+    console.log("USER: " + username + ", PASS: " + password)
+    axios.post('https://fast-refuge-14566.herokuapp.com/auth/login', { username, password } , {headers: headers})
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
         this.setState({ user });
-        // console.log("SENDING FROM CLIENT");
+        console.log("SENDING FROM CLIENT");
       })
       .catch(error => {
         console.error(error);
