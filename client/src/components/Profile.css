@@ -1,0 +1,29 @@
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: block;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 250px;
+    max-width: 250px;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.125);
+    border-radius: 25px;
+    margin-right: 80%;
+    margin-top: 1%;
+    margin-left: 1%;
+    padding-left: 1%;
+    background-color: orange;
+    color:white;
+   
+}
+
+.button {
+    color: blue;
+}
+
+.cardimg {
+    display: visible;
+}

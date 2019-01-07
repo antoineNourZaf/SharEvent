@@ -1,0 +1,9 @@
+.react-calendar {
+    width: 700px;
+    max-width: 100%;
+    background: orange;
+    border: 1px solid white;
+    font-family: Tahoma;
+    line-height: 2pt;
+    font-size: 16pt;
+}
