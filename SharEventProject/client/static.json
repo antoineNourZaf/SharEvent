@@ -1,5 +1,5 @@
 {
-  "root": "/build",
+  "root": "build/",
   "proxies": {
     "/auth/": {
       "origin": "https://fast-refuge-14566.herokuapp.com/auth"
