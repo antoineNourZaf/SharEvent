@@ -2,10 +2,10 @@
   "root": "build/",
   "proxies": {
     "/auth/": {
-      "origin": "https://fast-refuge-14566.herokuapp.com/auth"
+      "origin": "SERVER_URL/auth"
     },
     "/api/": {
-      "origin": "https://fast-refuge-14566.herokuapp.com/api"
+      "origin": "SERVER_URL/api"
     }
   }
 }
