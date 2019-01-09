@@ -4,6 +4,18 @@ const passportLocal = require('passport-local');
 const passportJWT = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 const { jwtOptions } = require('../config');
+const firebase = require('firebase-admin')
+
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyC5sgTCnDuXjxpchn78IyxHDhuCaVUQgwU",
+  authDomain: "sharevent-heig.firebaseapp.com",
+  databaseURL: "https://sharevent-heig.firebaseio.com",
+  projectId: "sharevent-heig",
+  storageBucket: "sharevent-heig.appspot.com",
+  messagingSenderId: "576134275096"
+};
+firebase.initializeApp(config);
 
 const USER = {
   id: '123456789',
