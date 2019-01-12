@@ -46,27 +46,27 @@ class DBManager {
     }
 
     getUsers(page) {
-        return getCollectionList(page, 'users', "idNb");
+        return this.getCollectionList(page, 'users', "idNb");
     }
 
     getUserById(username) {
-        return getCollectionById("username", username, 'users');
+        return this.getCollectionById("username", username, 'users');
     }
 
     getEventsList(page) {
-        return getCollectionList(page, 'Event', "date");
+        return this.getCollectionList(page, 'Event', "date");
     }
 
     getEventById(id) {
-        return getCollectionById("idNb", id, 'Event');
+        return this.getCollectionById("idNb", id, 'Event');
     }
 
     getTagsList() {
-        return getCollectionList(undefined, 'tags', "alias");
+        return this.getCollectionList(undefined, 'tags', "alias");
     }
 
     getTagById(alias) {
-        return getCollectionById("alias", alias, 'tags');
+        return this.getCollectionById("alias", alias, 'tags');
     }
 
     //find({'users', 'event', 'tags'}, {{name: admin},{'chill', 'concert'},{'ch'}}, {{'place'},{'DATE'}})
