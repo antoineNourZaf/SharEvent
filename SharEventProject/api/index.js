@@ -26,4 +26,4 @@ app.listen(port, () => {
 });
 
 const database = new DBManager();
-database.getUsersList(1).then(users => console.log(users));
+database.getUserById("notexist").then(id => console.log(id));
