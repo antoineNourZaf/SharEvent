@@ -59,69 +59,60 @@ router.get('/users?page=:nbPage', authenticationRequired, (req, res) => {
 
 // This endpoint return a user by its id
 router.get('/users/:id', authenticationRequired, (req, res) => {
-  getUserById(req.params.id)
+  database.getUserById(req.params.id)
     .then(user => {
-      res.status(200);
-      res.send(user)
+      res.status(200).send(user)
     })
     .catch(err => {
-      res.status(404);
-      res.send(err);
+      console.log("ERROR USER ID: " + req.params.id)
+      res.status(404).send(err);
     });
   //res.send({ username: req.user.username });
 })
 
 // This endpoint return all the events
 router.get('/events?page=:nbPage', authenticationRequired, (req, res) => {
-  getEventsList(req.nbPage)
+  database.getEventsList(req.nbPage)
     .then(eventList => {
-      res.status(200);
-      res.send(eventList)
+      res.status(200).send(eventList)
     })
     .catch(err => {
-      res.status(404);
-      res.send(err);
+      res.status(404).send(err);
     });
 })
 
 // This endpoint return an event by its id
 router.get('/events/:id', authenticationRequired, (req, res) => {
-  getEventById(req.params.id)
+  database.getEventById(req.params.id)
     .then(event => {
-      res.status(200);
-      res.send(event)
+      res.status(200).send(event)
     })
     .catch(err => {
-      res.status(404);
-      res.send(err);
+      res.status(404).send(err);
     });
   //res.send({ title: req.event.title });
 })
 
 // This endpoint return all the tags
 router.get('/tags', authenticationRequired, (req, res) => {
-  getTagsList()
+  database.getTagsList()
     .then(tagList => {
-      res.status(200);
-      res.send(tagList)
+      res.status(200).send(tagList)
     })
     .catch(err => {
-      res.status(404);
-      res.send(err);
+      res.status(404).send(err);
     });
   //res.send({ tag: req.tag });
 })
 
 // This endpoint return a tag wanted
 router.get('/tags/:id', authenticationRequired, (req, res) => {
-  getTagById(req.params.id)
+  database.getTagById(req.params.id)
     .then(tag => {
-      res.status(200);
-      res.send(tag)
+      res.status(200).send(tag)
     })
     .catch(err => {
-      res.status(404);
-      res.send(err);
+      res.status(404).send(err);
     });
   //res.send({ alias: req.tag.alias });
 })
@@ -135,13 +126,13 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
 
   // TODO split query
   
-  find(collection, infoLookingFor, clasification, page);
+  database.find(collection, infoLookingFor, clasification, page);
   res.send({ query: req.query });
 })
 
 // This endpoint let's us create a user
 router.post('/users?user=:user', (req, res) => {
-  createUser(req.params.user.lastname,
+  database.createUser(req.params.user.lastname,
              req.params.user.firstname,
              req.params.user.email,
              req.params.user.username,
@@ -161,7 +152,7 @@ router.post('/users?user=:user', (req, res) => {
 
 // This endpoint let's us create an event
 router.post('/events?event=:event', authenticationRequired, (req, res) => {
-  creatEvent(req.params.event.title,
+  database.creatEvent(req.params.event.title,
              req.params.event.creator,
              req.params.event.description,
              req.params.event.placeRef,
