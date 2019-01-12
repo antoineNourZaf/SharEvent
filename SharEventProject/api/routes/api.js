@@ -1,7 +1,9 @@
 const express = require('express');
 const passport = require('passport');
+const DBManager = require('../db/dbManager.js');
 
 const router = express.Router();
+const database = new DBManager();
 
 /**
  * authenticationRequired is a middleware that use the jwt strategy to authenticate
@@ -40,46 +42,88 @@ router.get('/me', authenticationRequired, (req, res) => {
   res.send({ user: req.user });
 })
 
+// #################################################################################################
+
 // This endpoint return all the users
-router.get('/users/:page', authenticationRequired, (req, res) => {
-  // TODO return a list of users
-  getUsersList(req.page);
-  res.send({ user: req.user });
+router.get('/users?page=:nbPage', authenticationRequired, (req, res) => {
+  database.getUsersList(req.nbPage)
+    .then(userList => {
+      res.status(200);
+      res.send(userList)
+    })
+    .catch(err => {
+      res.status(404);
+      res.send(err);
+    });
 })
 
 // This endpoint return a user by its id
 router.get('/users/:id', authenticationRequired, (req, res) => {
-  // TODO return a user by id
-  getUserById(req.params.id);
-  res.send({ username: req.user.username });
+  getUserById(req.params.id)
+    .then(user => {
+      res.status(200);
+      res.send(user)
+    })
+    .catch(err => {
+      res.status(404);
+      res.send(err);
+    });
+  //res.send({ username: req.user.username });
 })
 
 // This endpoint return all the events
-router.get('/events/:page', authenticationRequired, (req, res) => {
-  // TODO return a list of events
-  getEventsList(req.page);
-  res.send({ event: req.event });
+router.get('/events?page=:nbPage', authenticationRequired, (req, res) => {
+  getEventsList(req.nbPage)
+    .then(eventList => {
+      res.status(200);
+      res.send(eventList)
+    })
+    .catch(err => {
+      res.status(404);
+      res.send(err);
+    });
 })
 
 // This endpoint return an event by its id
 router.get('/events/:id', authenticationRequired, (req, res) => {
-  // TODO return an event by id
-  getEventById(req.params.id);
-  res.send({ title: req.event.title });
+  getEventById(req.params.id)
+    .then(event => {
+      res.status(200);
+      res.send(event)
+    })
+    .catch(err => {
+      res.status(404);
+      res.send(err);
+    });
+  //res.send({ title: req.event.title });
 })
 
 // This endpoint return all the tags
-router.get('/tags/:page', authenticationRequired, (req, res) => {
-  // TODO return a list of tags
-  getTagsList(req.page);
-  res.send({ tag: req.tag });
+router.get('/tags', authenticationRequired, (req, res) => {
+  getTagsList()
+    .then(tagList => {
+      res.status(200);
+      res.send(tagList)
+    })
+    .catch(err => {
+      res.status(404);
+      res.send(err);
+    });
+  //res.send({ tag: req.tag });
 })
 
 // This endpoint return a tag wanted
 router.get('/tags/:id', authenticationRequired, (req, res) => {
-  // TODO return a tag by id
-  getTagById(req.params.id);
-  res.send({ alias: req.tag.alias });
+  getTagById(req.params.id)
+    .then(tag => {
+      res.status(200);
+      res.send(tag)
+    })
+    .catch(err => {
+      res.status(404);
+      res.send(err);
+    });
+  //res.send({ alias: req.tag.alias });
 })
 
 // This endpoint let us search whatever we want
@@ -87,33 +131,53 @@ router.get('/tags/:id', authenticationRequired, (req, res) => {
 //find({'users', 'event'}, {{name: admin},{'chill', 'concert'}}, {{'place'},{'DATE'}})
 //find({'tags'}, {{ 'ch'}}, {alphabet})
 router.get('/search?q=:query', authenticationRequired, (req, res) => {
-  // TODO query for research
   // req.params.query to have all the querry
+
+  // TODO split query
+  
   find(collection, infoLookingFor, clasification, page);
   res.send({ query: req.query });
 })
 
-// This endpoint let's us to create a user
+// This endpoint let's us create a user
 router.post('/users?user=:user', (req, res) => {
-  // TODO create a user
   createUser(req.params.user.lastname,
              req.params.user.firstname,
              req.params.user.email,
              req.params.user.username,
-             req.params.user.password);
-  res.send({ user: req.user });
+             req.params.user.password)
+              .then(id => {
+                if(id) {
+                  res.status(201).send("User created successfuly");
+                }else {
+                  throw Error("ID IS EMPTY!");
+                }
+              })
+              .catch(err => {
+                res.status(400).send(err);
+              });
+    //res.send({ user: req.user });
 })
 
-// This endpoint let's us to create an event
+// This endpoint let's us create an event
 router.post('/events?event=:event', authenticationRequired, (req, res) => {
-  // TODO create an event
   creatEvent(req.params.event.title,
              req.params.event.creator,
              req.params.event.description,
              req.params.event.placeRef,
              req.params.event.date,
-             req.params.event.tagsList);
-  res.send({ event: req.event });
+             req.params.event.tagsList)
+             .then(id => {
+              if(id) {
+                res.status(201).send("Event created successfuly" + id);
+              }else {
+                throw Error("ID IS EMPTY!");
+              }
+            })
+            .catch(err => {
+              res.status(400).send(err);
+            });
+  //res.send({ event: req.event });
 })
 
 module.exports = router;
