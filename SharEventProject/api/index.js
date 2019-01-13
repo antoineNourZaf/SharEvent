@@ -26,4 +26,5 @@ app.listen(port, () => {
 });
 
 const database = new DBManager();
-database.getUserById("notexist").then(id => console.log(id));
+database.followEvent('admin', 0)
+database.followUser('user', 'notexist')
