@@ -40,14 +40,15 @@ class DBManager {
 
 
     getEventsList(page) {
-        return this[_getCollectionList](page, 'Event', "date");
+        return this[_getCollectionList](page, 'event', "date");
     }
 
 
     getEventById(id) {
-        return this[_getCollectionById]("idNb", id, 'Event');
+        return this[_getCollectionById]("idNb", id, 'event');
     }
 
+    
     getTagsList() {
         return this[_getCollectionList](undefined, 'tags', "alias");
     }
@@ -57,17 +58,21 @@ class DBManager {
         return this[_getCollectionById]("alias", alias, 'tags');
     }
 
+
     getTagId(alias) {
         return this[_getCollectionReference]('tags', alias, "alias");
     }
+
 
     getUserId(username) {
         return this[_getCollectionReference]('users', username, "username");
     }
 
+
     getEventId(id) {
-        return this[_getCollectionReference]('Event', id, "idNb");
+        return this[_getCollectionReference]('event', id, "idNb");
     }
+
 
     followEvent(username, eventIdNumber) {
         //récupère la référence de l'user
@@ -84,6 +89,7 @@ class DBManager {
             });
         });
     }
+
 
     followUser(username, usernameToFollow) {
         //récupère la référence de l'user
@@ -155,6 +161,7 @@ class DBManager {
             street: streetPlace
         }
         let refPlace;
+
         this[_placeExist](place).then(found => {
             if (found) {
                 refPlace = this[_getPlace](place).then(ref => {
@@ -193,7 +200,7 @@ class DBManager {
                     //attend de récupérer la référence du createur
                     refCreator.then(referenceCreator => {
                         //créé l'événement
-                        this[_getLastidNb]('Event').then(number => {
+                        this[_getLastidNb]('event').then(number => {
                             const event = {
                                 creator: referenceCreator,
                                 date: (new Date()),
@@ -203,7 +210,7 @@ class DBManager {
                                 tagsList: referencesTag,
                                 title: title
                             }
-                            return this.db.collection('Event').add(event)
+                            return this.db.collection('event').add(event)
                                 .then(eventReference => {
                                     // crée la createdEvent pour lier créateur et événement
                                     this[_createEventCreated](referenceCreator, eventReference);
@@ -216,10 +223,8 @@ class DBManager {
                 });
             });
         }).catch(err => console.log(err));
-
-        //créer place qui n'existe pas
-        //créer Event avec toutes les références
     }
+
 
     [_createTag](alias) {
         return this[_tagExist](alias).then(found => {
@@ -232,6 +237,7 @@ class DBManager {
         });
     }
 
+
     [_createPlace](place) {
         return this[_placeExist](place).then(found => {
             if (found) {
@@ -243,19 +249,23 @@ class DBManager {
         });
     }
 
+
     [_userExist](username) {
         return this[_collectionExist]('users', username, 'username');
     }
 
+
     [_tagExist](alias) {
         return this[_collectionExist]('tags', alias, 'alias');
     }
+
 
     [_placeExist](place) {
         const values = [place.city, place.number, place.postalCode, place.street];
         const names = ['city', 'number', 'postalCode', 'street'];
         return this[_collectionExist]('place', values, names);
     }
+
 
     [_collectionExist](collection, attributeValue, attributeName) {
         let query = this.db.collection(collection)
@@ -286,6 +296,7 @@ class DBManager {
             }).catch(err => {return false})
     }
 
+
     [_getLastidNb](collection) {
         let query = this.db.collection(collection)
             .orderBy("idNb", 'desc')
@@ -299,6 +310,7 @@ class DBManager {
         });
     }
 
+
     [_getPlace](place) {
         let query = this.db.collection('place')
             .where("city", '==', place.city)
@@ -309,6 +321,7 @@ class DBManager {
         return this[_get](query, true);
     }
 
+
     [_createEventCreated](userReference, eventReference) {
         const eventUserTable = {
             createdEvent: eventReference,
@@ -317,6 +330,7 @@ class DBManager {
         return this.db.collection('createdEvent').add(eventUserTable)
             .then(ref => {return ref.id;});
     }
+
 
     [_createTagRelation](tagReference, eventReference) {
         const tagEventTable = {
@@ -327,6 +341,7 @@ class DBManager {
             .then(ref => {return ref.id;});
     }
     
+
     [_get](request, getRef) {
         return request.get()
             .then(snapshot => {
@@ -345,6 +360,7 @@ class DBManager {
             });
     }
 
+
     [_getCollectionList](page, collection, orderBy) {
         let usersRef = this.db.collection(collection);
         if(page !== undefined) {
@@ -361,6 +377,7 @@ class DBManager {
         });
     }
 
+
     [_getCollectionById](attributName, attributValue, collection) {
         let query = this.db.collection(collection)
             .where(attributName, '==', attributValue);
@@ -373,6 +390,7 @@ class DBManager {
             }
         });
     }
+
 
     [_getCollectionReference](collection, identifierAttributeValue, identifierAttributeName) {
         let query = this.db.collection(collection)
