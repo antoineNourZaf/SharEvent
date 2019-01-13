@@ -120,12 +120,52 @@ router.get('/tags/:id', authenticationRequired, (req, res) => {
 // This endpoint let us search whatever we want
 //find({'users', 'event', 'tags'}, {{name: admin},{'chill', 'concert'},{'ch'}}, {{'place'},{'DATE'}})
 //find({'users', 'event'}, {{name: admin},{'chill', 'concert'}}, {{'place'},{'DATE'}})
-//find({'tags'}, {{ 'ch'}}, {alphabet})
+//find({'tags'}, {{'ch'}}, {alphabet})
+// 
 router.get('/search?q=:query', authenticationRequired, (req, res) => {
   // req.params.query to have all the querry
+  // words=bit+prog&tag=ab+cd+ef&place=1000+Lausanne&page=3
 
   // TODO split query
+  let collection = [];
+  let infoLookingFor = [];
+  let clasification = [];
+  let page = 0;
+
+  let query = req.params.query;
   
+  let splitedQuery = query.split("&"); // [words=bit+prog, tag=ab+cd+ef, place=1000+Lausanne, page=3]
+  
+  let splitParams = [];
+  for(let i = 0; i < splitedQuery.length; ++i) {
+    let temp = splitedQuery[i].split("=");
+    for(let j = 0; j < temp.length; ++j) {
+      splitParams.push(temp[j]);
+    } // [words, bit+prog, tag, ab+cd+ef, place, 1000+Lausanne, page, 3]
+  }
+
+  for(let k = 0; k < splitParams.length; ++k) {
+    if(splitParams[k] == "words") {
+        document.write("WORDS ");
+        collection[0] = true;
+        collection[1] = true;
+        infoLookingFor[0] = splitParams[++k].split("+");
+    }
+    if(splitParams[k] == "tag") {
+        document.write("TAG ");
+        collection[2] = true;
+        infoLookingFor[1] = splitParams[++k].split("+");
+    }
+    if(splitParams[k] == "place") {
+        document.write("PLACE ");
+        clasification[0] = splitParams[++k].split("+");
+    }
+    if(splitParams[k] == "page") {
+        document.write("PAGE ");
+        page = splitParams[++k];
+    }
+}
+
   database.find(collection, infoLookingFor, clasification, page);
   res.send({ query: req.query });
 })
@@ -152,12 +192,18 @@ router.post('/users?user=:user', (req, res) => {
 
 // This endpoint let's us create an event
 router.post('/events?event=:event', authenticationRequired, (req, res) => {
+  let place = req.params.event.placeRef;
+  let numberPlace = place[0];
+  let streetPlace = place[1];
+  let postalCodePlace = place[2];
+  let cityPlace = place[3];
   database.creatEvent(req.params.event.title,
              req.params.event.creator,
              req.params.event.description,
-             req.params.event.placeRef,
-             req.params.event.date,
-             req.params.event.tagsList)
+             numberPlace,
+             streetPlace,
+             postalCodePlace,
+             cityPlace)
              .then(id => {
               if(id) {
                 res.status(201).send("Event created successfuly" + id);
