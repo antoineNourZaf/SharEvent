@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import './components/Profile.js';
 import Profile from './components/Profile.js';
-import NavigationBar from './components/NavigationBar.js';
+import TitleBar from './components/TitleBar.js';
 import {Jumbotron} from 'reactstrap';
 import MainMenu from './components/MainMenu';
 
@@ -16,7 +16,7 @@ class App extends Component {
         return (
             <div className='main'>
                 
-                <SignUp/>              
+                <SignUp/>             
                
             </div>
         );

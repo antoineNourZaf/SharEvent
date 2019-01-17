@@ -24,22 +24,37 @@ export default class SignUpForm extends Component {
 
   getValidationState() {
     
+    /* TO DO */
+    // Quand le temps le permettra
     return null;
   }
 
-  handleChange(event) {
-    
-    const target = event.target.v;
-
+  handleChange(e) {
+   
     this.setState({
-      
+      lastname: e.target.lastname
     });
-    
+    this.setState({
+      firstname: e.target.firstname
+    });
+    this.setState({
+      email: e.target.email
+    });
+    this.setState({
+      username: e.target.username
+    });
+    this.setState({
+      password: e.target.password
+    });
   }
 
+  onSubmit = (event) => {
+    console.log('enregistrement reussi');
+    event.preventDefault();
+  }
   render() {
     return (
-      <Form horizontal>
+      <Form horizontal onSubmit={this.onSubmit}>
         <FormGroup controlId="lastname" validationState={this.getValidationState()}>
           <FormControl
             type="text" value={this.state.lastname} placeholder="Lastname" onChange={this.handleChange} />
@@ -70,7 +85,7 @@ export default class SignUpForm extends Component {
           <FormControl.Feedback />
           
         </FormGroup>
-        <Button>Creez mon compte !</Button>
+        <Button type="submit">Creez mon compte !</Button>
       </Form>
     );
   }
