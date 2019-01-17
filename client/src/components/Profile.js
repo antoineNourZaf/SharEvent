@@ -3,8 +3,6 @@ import "./Profile.css";
 import { Card, CardImg, CardText, CardBody, Media,
   CardTitle, CardSubtitle, Button } from 'reactstrap';
 
-  
-
 class Profile extends Component {
     render () {
         return (

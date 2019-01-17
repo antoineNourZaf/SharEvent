@@ -6,16 +6,19 @@ import NavigationBar from './components/NavigationBar.js';
 import {Jumbotron} from 'reactstrap';
 import MainMenu from './components/MainMenu';
 
+
+import Login from './views/login';
+import SignUp from './views/signup';
+
 class App extends Component {
     
     render() {
         return (
-            <Jumbotron>
-            
-                <NavigationBar/>
-                <Profile/>
-                <MainMenu/>
-            </Jumbotron>
+            <div className='main'>
+                
+                <SignUp/>              
+               
+            </div>
         );
     }
 }

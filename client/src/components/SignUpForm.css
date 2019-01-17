@@ -1,0 +1,10 @@
+.form-group{
+  padding-bottom: 5%;
+  box-sizing: content-box;
+}
+
+input{
+  min-width: 25%;
+  
+  box-sizing: border-box;
+}

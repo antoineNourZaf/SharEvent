@@ -12,12 +12,15 @@ import "./NavigationBar.css";
 class NavigationBar extends Component {
     render() {
         return(
-            <div>
-            <Navbar >
-              <NavbarBrand>SharEvent</NavbarBrand>
-            <Button outline color="primary">Sign In</Button>
-            <Button outline color="primary">Sign Up</Button>
+            <div className='navigation-bar'>
+            <Navbar>
+                <img src='logoMinBlanc.png' width={50}px/>SharEvent
+            
+              
+           
+                
             </Navbar>
+            
             </div>
         );
     }
