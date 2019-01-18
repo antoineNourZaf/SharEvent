@@ -31,27 +31,27 @@ const authentication = (req, res, next) => {
 // This endpoint is accessible by authenticated and anonymous users
 router.get('/public', authentication, (req, res) => {
   const username = req.user ? req.user.username : 'anonymous';
-  res.send({ message: `Hello ${username}, this message is public!` })
+  res.send({ message: `Hello ${username}, this message is public!` });
 });
 
 // This endpoint is protected and has access to the authenticated user.
 router.get('/private', authenticationRequired, (req, res) => {
-  res.send({ message: `Hello ${req.user.username}, only logged in users can see this message!` })
+  res.send({ message: `Hello ${req.user.username}, only logged in users can see this message!` });
 });
 
 // This endpoint is protected and has access to the authenticated user.
 router.get('/me', authenticationRequired, (req, res) => {
-  console.log("USER: ", req.user)
+  console.log("USER: ", req.user);
   res.send({ user: req.user });
 });
 
 // #################################################################################################
 
-//This endpoint return all the users
+// This endpoint return all the users
 router.get('/users?page=:nbPage', authenticationRequired, (req, res) => {
   database.getUsersList(req.nbPage)
     .then(userList => {
-      res.status(200).send(userList)
+      res.status(200).send(userList);
     })
     .catch(err => {
       res.status(404).send(err);
@@ -62,21 +62,18 @@ router.get('/users?page=:nbPage', authenticationRequired, (req, res) => {
 router.get('/users/:id', authenticationRequired, (req, res) => {
   database.getUserById(req.params.id)
     .then(user => {
-      console.log('USER', user);
-      res.status(200).send(user)
+      res.status(200).send(user);
     })
     .catch(err => {
-      console.log("ERROR USER ID: " + req.params.id)
       res.status(404).send(err);
     });
-  //res.send({ username: req.user.username });
 });
 
 // This endpoint return all the events
 router.get('/events?page=:nbPage', authenticationRequired, (req, res) => {
   database.getEventsList(req.nbPage)
     .then(eventList => {
-      res.status(200).send(eventList)
+      res.status(200).send(eventList);
     })
     .catch(err => {
       res.status(404).send(err);
@@ -87,36 +84,33 @@ router.get('/events?page=:nbPage', authenticationRequired, (req, res) => {
 router.get('/events/:id', authenticationRequired, (req, res) => {
   database.getEventById(req.params.id)
     .then(event => {
-      res.status(200).send(event)
+      res.status(200).send(event);
     })
     .catch(err => {
       res.status(404).send(err);
     });
-  //res.send({ title: req.event.title });
 });
 
 // This endpoint return all the tags
 router.get('/tags', authenticationRequired, (req, res) => {
   database.getTagsList()
     .then(tagList => {
-      res.status(200).send(tagList)
+      res.status(200).send(tagList);
     })
     .catch(err => {
       res.status(404).send(err);
     });
-  //res.send({ tag: req.tag });
 });
 
 // This endpoint return a tag wanted
 router.get('/tags/:id', authenticationRequired, (req, res) => {
   database.getTagById(req.params.id)
     .then(tag => {
-      res.status(200).send(tag)
+      res.status(200).send(tag);
     })
     .catch(err => {
       res.status(404).send(err);
     });
-  //res.send({ alias: req.tag.alias });
 });
 
 // This endpoint lets us search whatever we want
@@ -168,8 +162,10 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
   }
 
   database.find(collection, infoLookingFor, clasification, page)
-    .then(results => res.send(results));
-  // res.send({ query: req.query });
+    .then(results => res.status(200).send(results))
+    .catch(err => {
+      res.status(400).send(err);
+    });
 });
 
 // This endpoint lets us create a user
@@ -189,7 +185,6 @@ router.post('/users?user=:user', (req, res) => {
               .catch(err => {
                 res.status(400).send(err);
               });
-    //res.send({ user: req.user });
 });
 
 // This endpoint lets us create an event
@@ -216,19 +211,28 @@ router.post('/events?event=:event', authenticationRequired, (req, res) => {
             .catch(err => {
               res.status(400).send(err);
             });
-  //res.send({ event: req.event });
 });
 
 // This endpoint lets us follow another user
 router.post('/users/user/:id?username=:username', authenticationRequired, (req, res) => {
   database.followUser(req.params.username, req.params.id)
-    .then(username => res.status(201).send("You correctly followed the user " + username));
+    .then(username =>
+      res.status(201).send("You correctly followed the user " + username)
+    )
+    .catch(err => {
+      res.status(400).send(err);
+    });;
 });
 
 // This endpoint lets us follow an event
 router.post('/events/event/:id?username=:username', authenticationRequired, (req, res) => {
   database.followUser(req.params.username, req.params.id)
-    .then(event => res.status(201).send("You correctly followed the event " + event));
+    .then(event =>
+      res.status(201).send("You correctly followed the event " + event)
+    )
+    .catch(err => {
+      res.status(400).send(err);
+    });;
 });
 
 module.exports = router;

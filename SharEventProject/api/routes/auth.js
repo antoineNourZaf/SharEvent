@@ -5,13 +5,8 @@ const passportJWT = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 const { jwtOptions } = require('../config');
 const DBManager = require('../db/dbManager.js');
+
 const database = DBManager;
-// const USER = {
-//   id: '123456789',
-//   email: 'admin@example.com',
-//   username: 'admin',
-//   password: 'admin',
-// }
 
 const router = express.Router();
 const LocalStrategy = passportLocal.Strategy;
@@ -60,10 +55,6 @@ passport.use(new JWTStrategy(
         console.log(err);
         return done(null, false);
       });
-    // if (userId !== 1) {
-    //   return done(null, false);
-    // }
-    // return done(null, USER);
   },
 ));
 
