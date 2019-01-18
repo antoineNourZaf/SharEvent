@@ -25,6 +25,5 @@ app.listen(port, () => {
   console.log(`Magic happens at http://localhost:${port}`);
 });
 
+// Data base init and usage
 const database = new DBManager();
-database.followEvent('admin', 0)
-database.followUser('user', 'notexist')
