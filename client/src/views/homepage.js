@@ -1,5 +1,6 @@
-import React from 'react';
-import { AuthContext } from './AuthProvider';
+import React, {Component} from 'react';
+import { AuthContext } from '../AuthProvider';
+import TitleBar from '../components/TitleBar.js';
 
 export default class HomePage extends Component {
 
@@ -7,9 +8,10 @@ export default class HomePage extends Component {
     return (
       <AuthContext>
         {({ signOut }) => (
-          <div>
+          <div className="homepage">
+          <TitleBar/>
           <h1>Welcome !</h1>
-          <button onClick={signOut}>LOGOUT</button>
+          
           </div>
         )}
       </AuthContext>
