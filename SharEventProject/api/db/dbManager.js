@@ -1,7 +1,7 @@
 const firebase = require("firebase-admin");
 const { databaseOptions } = require('../config');
 
-const serviceAccount = require("../sharevent-heig-firebase-adminsdk-dqbhx-343d3d8b9b.json");
+// const serviceAccount = require("../sharevent-heig-firebase-adminsdk-dqbhx-343d3d8b9b.json");
 
 const _createTag = Symbol('createTag');
 const _userExist = Symbol('userExist');
@@ -21,7 +21,20 @@ const _createTagRelation = Symbol('createTagRelation');
 class DBManager {
     constructor() {
         firebase.initializeApp({
-            credential: firebase.credential.cert(serviceAccount),
+            credential: firebase.credential.cert(
+                {
+                    "type": process.env.TYPE,
+                    "project_id": process.env.PROJECT_ID,
+                    "private_key_id": process.env.PRIVATE_KEY_ID,
+                    "private_key": process.env.PRIVATE_KEY,
+                    "client_email": process.env.CLIENT_EMAIL,
+                    "client_id": process.env.CLIENT_ID,
+                    "auth_uri": process.env.AUTH_URI,
+                    "token_uri": process.env.TOKEN_URI,
+                    "auth_provider_x509_cert_url": process.env.AUTH_PROVIDER_X509_CERT_URL,
+                    "client_x509_cert_url": process.env.CLIENT_X509_CERT_URL
+                }
+            ),
             databaseURL: 'https://sharevent-heig.firebaseio.com'
         });
         this.db = firebase.firestore();
@@ -126,7 +139,7 @@ class DBManager {
         }
         return this[_userExist](username).then(exist => {
             if (exist) {
-                throw new Error('username already exist in database : ' + username);
+                throw new Error('Username already exist in database : ' + username);
             } else {
                 return this[_getLastidNb]('users').then(lastIndex => {
                     userData.idNb = lastIndex + 1;
@@ -229,7 +242,7 @@ class DBManager {
     [_createTag](alias) {
         return this[_tagExist](alias).then(found => {
             if (found) {
-                throw new Error("tag avec alias " + alias + " exist déjà")
+                throw new Error("Tag with alias " + alias + " already exist.")
             } else {
                 return this.db.collection('tags').add({alias: alias})
                     .then(ref => {return ref.id;});
@@ -241,7 +254,7 @@ class DBManager {
     [_createPlace](place) {
         return this[_placeExist](place).then(found => {
             if (found) {
-                throw new Error("place exist déjà")
+                throw new Error("Place already exist.")
             } else {
                 return this.db.collection('place').add(place)
                     .then(ref => {return ref;});
@@ -405,4 +418,4 @@ class DBManager {
     }
 }
 
-module.exports = DBManager;
+module.exports = new DBManager();

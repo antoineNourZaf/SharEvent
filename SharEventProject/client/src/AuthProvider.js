@@ -24,7 +24,21 @@ class AuthProvider extends Component {
       axios.get('/api/me', {
         headers: {
           Authorization: `bearer ${token}`,
-          Accept: `https://fast-refuge-14566.herokuapp.com`,
+        }
+      })
+        .then(response => {
+          const { user } = response.data;
+          this.setState({ user });
+        })
+        .catch(err => {
+          console.error(err);
+          localStorage.removeItem('token');
+        })
+    }
+    if (token) {
+      axios.get('/api/private', {
+        headers: {
+          Authorization: `bearer ${token}`,
         }
       })
         .then(response => {
@@ -39,7 +53,6 @@ class AuthProvider extends Component {
   }
 
   signIn = ({ username, password }) => {
-    // Implement me !
     axios.post('/auth/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
@@ -53,7 +66,6 @@ class AuthProvider extends Component {
   }
 
   signOut = () => {
-    // Implement me !
     localStorage.removeItem('token');
     window.location.reload();
   }

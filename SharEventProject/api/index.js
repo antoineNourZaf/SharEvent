@@ -8,13 +8,13 @@ const cors = require('cors');
 const DBManager = require('./db/dbManager.js');
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 app.use(passport.initialize());
 
 app.use('/api', api);
 app.use('/auth', auth);
-app.use(cors());
 
 app.use((err, req, res, next) => {
   console.error(err);
@@ -24,3 +24,10 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Magic happens at http://localhost:${port}`);
 });
+
+// const database = DBManager;
+// database.getUserById("admin").then(user => {
+//   console.log("AUTH " + user + ", " + user.password)
+// });
+// database.followEvent('admin', 0)
+// database.followUser('user', 'notexist')
