@@ -3,6 +3,7 @@ const { databaseOptions } = require('../config');
 
 // const serviceAccount = require("../sharevent-heig-firebase-adminsdk-dqbhx-343d3d8b9b.json");
 
+// Declaration of private methods
 const _createTag = Symbol('createTag');
 const _userExist = Symbol('userExist');
 const _get = Symbol('get');
@@ -17,7 +18,9 @@ const _placeExist = Symbol('placeExist');
 const _getPlace = Symbol('getPlace');
 const _createEventCreated = Symbol('createEventCreated');
 const _createTagRelation = Symbol('createTagRelation');
+const _createCollectionIndex = Symbol('createCollectionIndex');
 
+// DBManager is a Singleton
 class DBManager {
     constructor() {
         firebase.initializeApp({
@@ -41,6 +44,7 @@ class DBManager {
         this.pageLength = 1;
     }
 
+    // Public methods
     
     getUsers(page) {
         return this[_getCollectionList](page, 'users', "idNb");
@@ -121,6 +125,7 @@ class DBManager {
     }
 
 
+    //find({COLLECIONS}, {{FILTER_NAMES}, {FILTER_EVENTS}, {FILTER_TAGS}}, {SORTING})
     //find({'users', 'event', 'tags'}, {{name: admin},{'chill', 'concert'},{'ch'}}, {{'place'},{'DATE'}})
     //find({'users', 'event'}, {{name: admin},{'chill', 'concert'}}, {{'place'},{'DATE'}})
     //find({'tags'}, {{ 'ch'}}, {alphabet})
@@ -151,7 +156,7 @@ class DBManager {
     }
 
 
-    creatEvent(title, creator, description, numberPlace, streetPlace, postalCodePlace, cityPlace) {
+    createEvent(title, creator, description, numberPlace, streetPlace, postalCodePlace, cityPlace) {
         //parse les tags de la description
         let tagsList = description.split('#').map(item => {
             return item.trim();
@@ -166,7 +171,7 @@ class DBManager {
         });
 
 
-        ///récupérer référence de la place (la créé si nécessaire)
+        ///récupérer référence de la place (la créér si nécessaire)
         const place = {
             city: cityPlace,
             number: numberPlace,
@@ -238,6 +243,7 @@ class DBManager {
         }).catch(err => console.log(err));
     }
 
+    // Private Methods
 
     [_createTag](alias) {
         return this[_tagExist](alias).then(found => {
@@ -260,6 +266,24 @@ class DBManager {
                     .then(ref => {return ref;});
             }
         });
+    }
+
+    [_createCollectionIndex](obj, collection) {
+        return this.db.collection(collection).add(obj)
+            .then(ref => {
+                Object.values(obj).forEach(value => {
+                    let array = [];
+                    // TODO NOT PASSWORD OMG
+                    if (typeof value === 'string') {
+                        value.split(/,?\s+/).forEach(s => {
+                            array.push(s);
+                        });
+                    }
+                    this.db.collection(collection+'Index').add(s)
+                });
+                
+                return ref.id;
+            });
     }
 
 
@@ -310,6 +334,7 @@ class DBManager {
     }
 
 
+    // Takes the nost recent collection member
     [_getLastidNb](collection) {
         let query = this.db.collection(collection)
             .orderBy("idNb", 'desc')
@@ -335,6 +360,7 @@ class DBManager {
     }
 
 
+    // Relation Table between event and users (creators)
     [_createEventCreated](userReference, eventReference) {
         const eventUserTable = {
             createdEvent: eventReference,
@@ -344,7 +370,7 @@ class DBManager {
             .then(ref => {return ref.id;});
     }
 
-
+    // Relation Table between event and tags
     [_createTagRelation](tagReference, eventReference) {
         const tagEventTable = {
             eventRef: eventReference,
@@ -375,16 +401,16 @@ class DBManager {
 
 
     [_getCollectionList](page, collection, orderBy) {
-        let usersRef = this.db.collection(collection);
+        let collectionRef = this.db.collection(collection);
         if(page !== undefined) {
-            usersRef = usersRef.orderBy(orderBy)
+            collectionRef =collectionRef.orderBy(orderBy)
                 .startAt(this.pageLength * page)
                 .limit(this.pageLength);
         }
-        return this[_get](usersRef).then(userList => {
-            for (let i = 0; i < userList.length; i++) {
-                const {password, ...userCleaned} = userList[i];
-                userList[i] = userCleaned;
+        return this[_get](collectionRef).then(collectionList => {
+            for (let i = 0; i < collectionList.length; i++) {
+                const {password, ...userCleaned} = collectionList[i];
+                collectionList[i] = userCleaned;
             }
             return userList;
         });
