@@ -31,3 +31,5 @@ app.listen(port, () => {
 // });
 // database.followEvent('admin', 0)
 // database.followUser('user', 'notexist')
+
+// database.find(['users', 'event'], ['email', 'renens']).then(result => console.log(result['users'][0]));

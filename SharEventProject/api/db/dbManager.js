@@ -2,6 +2,7 @@ const firebase = require("firebase-admin");
 const { databaseOptions } = require('../config');
 
 // const serviceAccount = require("../sharevent-heig-firebase-adminsdk-dqbhx-343d3d8b9b.json");
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 // Declaration of private methods
 const _createTag = Symbol('createTag');
@@ -125,12 +126,38 @@ class DBManager {
     }
 
 
-    //find({COLLECIONS}, {{FILTER_NAMES}, {FILTER_EVENTS}, {FILTER_TAGS}}, {SORTING})
-    //find({'users', 'event', 'tags'}, {{name: admin},{'chill', 'concert'},{'ch'}}, {{'place'},{'DATE'}})
-    //find({'users', 'event'}, {{name: admin},{'chill', 'concert'}}, {{'place'},{'DATE'}})
-    //find({'tags'}, {{ 'ch'}}, {alphabet})
-    find(collection, infoLookingFor, classification, page) {
-
+    find(collections, words) {
+        let waitingArray = []
+        let resultArray = []
+        let stockResult = {}
+        collections.forEach(collection =>{
+            words.forEach(word =>{
+                var docRef = this.db.collection(collection.toLowerCase() + "Index").doc(word)
+                waitingArray.push(docRef.get().then(result => {
+                    let collectionResultArray = []
+                    if (result.exists) {
+                        result.data().listRef.forEach(ref => {
+                            collectionResultArray.push(this.db.collection(collection).doc(ref.id).get().then(resultItem => {
+                                return resultItem.data();
+                            }))
+                        })
+                    }
+                    resultArray.push(Promise.all(collectionResultArray).then(veryAbsoluteFinalResult => {
+                        if (veryAbsoluteFinalResult.length > 0){
+                            if(!(collection in stockResult)) {
+                                stockResult[collection] = [];
+                            }
+                            stockResult[collection].push(veryAbsoluteFinalResult);
+                        }
+                    }))
+                }))
+            })
+        })
+        return Promise.all(waitingArray).then(osef => {
+            return Promise.all(resultArray).then(finalResult => {
+                return stockResult
+            })
+        })
     }
 
 
@@ -148,8 +175,8 @@ class DBManager {
             } else {
                 return this[_getLastidNb]('users').then(lastIndex => {
                     userData.idNb = lastIndex + 1;
-                    return this.db.collection('users').add(userData)
-                        .then(ref => {return ref.id;});
+                    const {password, ...cleanedUser} = userData;
+                    return this[_createCollectionIndex](userData, cleanedUser, 'users');
                 });
             }
         });
@@ -228,7 +255,11 @@ class DBManager {
                                 tagsList: referencesTag,
                                 title: title
                             }
-                            return this.db.collection('event').add(event)
+                            let cleanedEvent = event
+                            cleanedEvent.description = description
+                            cleanedEvent.streetPlace = streetPlace
+                            cleanedEvent.city = cityPlace
+                            return this[_createCollectionIndex](event, cleanedEvent, 'event')
                                 .then(eventReference => {
                                     // crée la createdEvent pour lier créateur et événement
                                     this[_createEventCreated](referenceCreator, eventReference);
@@ -250,7 +281,8 @@ class DBManager {
             if (found) {
                 throw new Error("Tag with alias " + alias + " already exist.")
             } else {
-                return this.db.collection('tags').add({alias: alias})
+                const tag = {alias: alias}
+                return this[_createCollectionIndex](tag, tag, 'tags')
                     .then(ref => {return ref.id;});
             }
         });
@@ -268,20 +300,31 @@ class DBManager {
         });
     }
 
-    [_createCollectionIndex](obj, collection) {
-        return this.db.collection(collection).add(obj)
+
+    [_createCollectionIndex](fullObj, safeObj, collection) {
+        return this.db.collection(collection).add(fullObj)
             .then(ref => {
-                Object.values(obj).forEach(value => {
+                Object.values(safeObj).forEach(value => {
                     let array = [];
-                    // TODO NOT PASSWORD OMG
                     if (typeof value === 'string') {
-                        value.split(/,?\s+/).forEach(s => {
-                            array.push(s);
+                        (value.split(/[\s,#]+/)).forEach(s => {
+                                if (s !== undefined) {
+                                const indexName = collection + "Index"
+                                this.db.collection(indexName).doc(s).get().then(doc => {
+                                    if (doc.exists) {
+                                        this.db.collection(indexName).doc(s).update({
+                                            listRef: FieldValue.arrayUnion(ref)
+                                        })
+                                    } else {
+                                        this.db.collection(indexName).doc(s).set({
+                                            listRef: FieldValue.arrayUnion(ref)
+                                        })
+                                    }
+                                });
+                            }
                         });
                     }
-                    this.db.collection(collection+'Index').add(s)
                 });
-                
                 return ref.id;
             });
     }
