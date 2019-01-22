@@ -14,7 +14,7 @@ class TitleBar extends Component {
       <div className='title-bar'>
         <Navbar>
           <img src='logoMinBlanc.png' width={50}px/>SharEvent
-          <button >Log out</button>
+          
         </Navbar>
             
       </div>

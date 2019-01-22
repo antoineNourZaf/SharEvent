@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import {Button} from 'react-bootstrap';
+import {Button, Form, HelpBlock, FormGroup, FormControl} from 'react-bootstrap';
+import AuthProvider, { AuthContext } from '../AuthProvider.js';
+import axios from 'axios';
 import './LoginForm.css';
+
 
 class LoginForm extends Component {
 
@@ -8,52 +11,115 @@ class LoginForm extends Component {
     super(props);
 
     this.state = {
-      email: "",
-      password: ""
+      username: "",
+      password: "",
+      isAuth: false
     };
+    
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.signIn = this.signIn.bind(this);
   }
 
-  validateForm() {
-    return this.state.email.length > 0 && this.state.password.length > 0;
+  componentDidMount() {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      axios.get('localhost:5000/api/me', {
+        headers: {
+          Authorization: `bearer ${token}`,
+        }
+      })
+        .then(response => {
+          const { user } = response.data;
+          this.setState({ user });
+        })
+        .catch(err => {
+          console.error(err);
+          localStorage.removeItem('token');
+        })
+    }
+    if (token) {
+      axios.get('/api/private', {
+        headers: {
+          Authorization: `bearer ${token}`,
+        }
+      })
+        .then(response => {
+          const { user } = response.data;
+          this.setState({ user });
+        })
+        .catch(err => {
+          console.error(err);
+          localStorage.removeItem('token');
+        })
+    }
   }
 
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
+  signIn = ({ username, password }) => {
+    axios.post('localhost:5000/auth/login', { username, password })
+      .then(response => {
+        const { user, token } = response.data;
+        window.localStorage.setItem('token', token);
+        
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({ error: 'Invalid username or password' });
+      })
   }
 
-  handleSubmit = event => {
-    event.preventDefault();
+  signOut = () => {
+    localStorage.removeItem('token');
+    window.location.reload();
   }
 
-    render() {
-      return (
+  handleChange = (event) => {
+
+    
+    this.setState({ [event.target.name]: event.target.value}); 
+    
+  }
+
+  handleSubmit = (e) => {
+    
+    e.preventDefault();
+    this.signIn(this.state.username, this.state.password);
+    
+    
+  }
+  getValidationState = () => {
+    return null;
+  }
+
+  render() {
+    return (
+      
       <div className='FormContainer'>
-                <Logo />
-                Login<br/><br/>
-                <form onSubmit= { this.props.onSubmit }>
-                  <Input type='text' name='username' placeholder='Username' /><br/>
-                  <Input type='password' name='password' placeholder='Password' /><br/>
-                  <Button> Sign In</Button>
-                </form>
-                
-                  <a href='#'>Lost your password ?</a>
-             </div>
-        );
-    }
+      
+        <Logo />
+        Login<br/><br/>
+        <Form horizontal onSubmit={this.handleSubmit}>
+          <FormGroup controlId="lastname" validationState={this.getValidationState()}>
+            <FormControl
+              type="text" name='username' value={this.state.username} placeholder="Username" onChange={this.handleChange} />
+            < FormControl.Feedback />
+          </FormGroup>
+        
+          <FormGroup controlId="firstname" validationState={this.getValidationState()}>
+            <FormControl
+              type="password" name='password' value={this.state.password} placeholder="Password" onChange={this.handleChange} />
+            < FormControl.Feedback />
+          </FormGroup>
+          <Button type="submit">Sign In!</Button>
+          </Form>
+        <a href='#'>Lost your password ?</a>
+        
+      </div>
+      
+    );
+  }
 }
 
-
-class Input extends Component {
-    render() {
-      return (<div className='Input'>
-                <input type={ this.props.type } name={ this.props.name } placeholder={ this.props.placeholder } required autocomplete='false'/>
-                <label for={ this.props.name } ></label>
-             </div>);
-    }
-  
-}
 
 class Logo extends Component {
     render() {

@@ -1,6 +1,8 @@
+body {
+    background: #EFEFEF;
+}
 .Presentation {
     background: orange;
-    
     position: fixed;
     height:100%;
     width:50%;
@@ -19,7 +21,7 @@
     margin-left:20%;
 }
 
-.FormContainer {
+ .FormContainer{
     
     display: block;
     margin-top: 12%;
@@ -48,7 +50,7 @@ Button {
 	color:orange;
 	font-family:Verdana;
 	font-size:14px;
-	padding:5px 10px;
+	
 	text-decoration:none;
 	text-shadow:0px 5px 5px #d4ba52;
 }

@@ -15,6 +15,7 @@ class AuthProvider extends Component {
       error: null,
       signIn: this.signIn,
       signOut: this.signOut,
+      isAuth: false
     }
   }
 
@@ -44,6 +45,7 @@ class AuthProvider extends Component {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
         this.setState({ user });
+        this.setState({isAuth: true})
       })
       .catch(error => {
         console.error(error);
