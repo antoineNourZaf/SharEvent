@@ -35,10 +35,24 @@ class AuthProvider extends Component {
           localStorage.removeItem('token');
         })
     }
+    if (token) {
+      axios.get('/api/private', {
+        headers: {
+          Authorization: `bearer ${token}`,
+        }
+      })
+        .then(response => {
+          const { user } = response.data;
+          this.setState({ user });
+        })
+        .catch(err => {
+          console.error(err);
+          localStorage.removeItem('token');
+        })
+    }
   }
 
   signIn = ({ username, password }) => {
-    // Implement me !
     axios.post('/auth/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
@@ -52,7 +66,6 @@ class AuthProvider extends Component {
   }
 
   signOut = () => {
-    // Implement me !
     localStorage.removeItem('token');
     window.location.reload();
   }
