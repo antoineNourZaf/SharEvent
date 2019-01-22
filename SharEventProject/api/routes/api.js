@@ -124,8 +124,6 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
   // TODO split query
   let collection = [];
   let infoLookingFor = [];
-  let clasification = [];
-  let page = 0;
 
   let query = req.params.query;
   
@@ -142,22 +140,18 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
   for(let k = 0; k < splitParams.length; ++k) {
     if(splitParams[k] == "words") {
         document.write("WORDS ");
-        collection[0] = true;
-        collection[1] = true;
+        collection[0] = 'users';
+        collection[1] = 'event';
         infoLookingFor[0] = splitParams[++k].split("+");
     }
     if(splitParams[k] == "tag") {
         document.write("TAG ");
-        collection[2] = true;
+        collection[2] = 'tags';
         infoLookingFor[1] = splitParams[++k].split("+");
-    }
-    if(splitParams[k] == "place") {
-        document.write("PLACE ");
-        clasification[0] = splitParams[++k].split("+");
     }
   }
 
-  database.find(collection, infoLookingFor, clasification, page)
+  database.find(collection, infoLookingFor)
     .then(results => res.status(200).send(results))
     .catch(err => {
       res.status(400).send(err);
