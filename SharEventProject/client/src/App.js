@@ -20,7 +20,7 @@ const LoginPage = () => {
   return (
     <AuthContext>
       {({ error, user, signIn }) => {
-
+        console.log("CONNECTED USER : ", user);
         if (user) {
           return <Redirect to="/" />;
         }

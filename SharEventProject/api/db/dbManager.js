@@ -137,7 +137,7 @@ class DBManager {
     createUser(lastname, firstname, email, username, password) {
         const userData = {
             lastname: lastname,
-            firtname: firstname,
+            firstname: firstname,
             email: email,
             username: username,
             password: password

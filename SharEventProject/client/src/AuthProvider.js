@@ -57,6 +57,7 @@ class AuthProvider extends Component {
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
+        console.log("LOGIN USER: ", user)
         this.setState({ user });
       })
       .catch(error => {
@@ -72,6 +73,7 @@ class AuthProvider extends Component {
 
   render() {
     const { children } = this.props
+    console.log("CHILDREN USER: ", children)
     return (
       <AuthContextProvider value={this.state}>
         {children}

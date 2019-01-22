@@ -92,8 +92,8 @@ router.get('/events/:id', authenticationRequired, (req, res) => {
 });
 
 // This endpoint return all the tags
-router.get('/tags', authenticationRequired, (req, res) => {
-  database.getTagsList()
+router.get('/tags?page=:nbPage', authenticationRequired, (req, res) => {
+  database.getTagsList(req.nbPage)
     .then(tagList => {
       res.status(200).send(tagList);
     })
@@ -154,10 +154,6 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
     if(splitParams[k] == "place") {
         document.write("PLACE ");
         clasification[0] = splitParams[++k].split("+");
-    }
-    if(splitParams[k] == "page") {
-        document.write("PAGE ");
-        page = splitParams[++k];
     }
   }
 

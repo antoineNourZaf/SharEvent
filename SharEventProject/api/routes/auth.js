@@ -49,7 +49,8 @@ passport.use(new JWTStrategy(
         if(user === null) {
           throw new Error("Couldn't find connected user.");
         }
-        return done(null, user);
+        const { password, createdEvent, ...userLess } = user;
+        return done(null, userLess);
       })
       .catch(err => {
         console.log(err);
@@ -59,7 +60,7 @@ passport.use(new JWTStrategy(
 ));
 
 router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
-  const { password, ...user } = req.user;
+  const { password, createdEvent, ...user } = req.user;
   const token = jwt.sign({ userId: user.username }, jwtOptions.secret);
   res.send({ user, token });
 });
