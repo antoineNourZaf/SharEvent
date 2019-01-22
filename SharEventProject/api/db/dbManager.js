@@ -81,7 +81,7 @@ class DBManager {
 
 
     getEventId(id) {
-        return this[_getCollectionReference]('Event', id, "idNb");
+        return this[_getCollectionReference]('event', id, "idNb");
     }
 
 
