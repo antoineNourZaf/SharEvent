@@ -119,12 +119,38 @@ class DBManager {
     }
 
 
-    //find({COLLECIONS}, {{FILTER_NAMES}, {FILTER_EVENTS}, {FILTER_TAGS}}, {SORTING})
-    //find({'users', 'event', 'tags'}, {{name: admin},{'chill', 'concert'},{'ch'}}, {{'place'},{'DATE'}})
-    //find({'users', 'event'}, {{name: admin},{'chill', 'concert'}}, {{'place'},{'DATE'}})
-    //find({'tags'}, {{ 'ch'}}, {alphabet})
-    find(collection, infoLookingFor, classification, page) {
-
+    find(collections, words) {
+        let waitingArray = []
+        let resultArray = []
+        let stockResult = {}
+        collections.forEach(collection =>{
+            words.forEach(word =>{
+                var docRef = this.db.collection(collection.toLowerCase() + "Index").doc(word)
+                waitingArray.push(docRef.get().then(result => {
+                    let collectionResultArray = []
+                    if (result.exists) {
+                        result.data().listRef.forEach(ref => {
+                            collectionResultArray.push(this.db.collection(collection).doc(ref.id).get().then(resultItem => {
+                                return resultItem.data();
+                            }))
+                        })
+                    }
+                    resultArray.push(Promise.all(collectionResultArray).then(veryAbsoluteFinalResult => {
+                        if (veryAbsoluteFinalResult.length > 0){
+                            if(!(collection in stockResult)) {
+                                stockResult[collection] = [];
+                            }
+                            stockResult[collection].push(veryAbsoluteFinalResult);
+                        }
+                    }))
+                }))
+            })
+        })
+        return Promise.all(waitingArray).then(osef => {
+            return Promise.all(resultArray).then(finalResult => {
+                return stockResult
+            })
+        })
     }
 
 
