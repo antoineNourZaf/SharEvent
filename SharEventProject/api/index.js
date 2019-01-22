@@ -27,3 +27,4 @@ app.listen(port, () => {
 
 // Data base init and usage
 const database = new DBManager();
+database.createEvent("title2", "admin", "description#ok #yolo#metoo", 21, "avenue de la poste", 1234, "renens")

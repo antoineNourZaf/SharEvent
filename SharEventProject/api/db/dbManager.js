@@ -2,6 +2,7 @@ const firebase = require("firebase-admin");
 const { databaseOptions } = require('../config');
 
 const serviceAccount = require("../sharevent-heig-firebase-adminsdk-dqbhx-343d3d8b9b.json");
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 // Declaration of private methods
 const _createTag = Symbol('createTag');
@@ -18,6 +19,7 @@ const _placeExist = Symbol('placeExist');
 const _getPlace = Symbol('getPlace');
 const _createEventCreated = Symbol('createEventCreated');
 const _createTagRelation = Symbol('createTagRelation');
+const _createCollectionIndex = Symbol('createCollectionIndex');
 
 let instance;
 
@@ -79,7 +81,7 @@ class DBManager {
 
 
     getEventId(id) {
-        return this[_getCollectionReference]('event', id, "idNb");
+        return this[_getCollectionReference]('Event', id, "idNb");
     }
 
 
@@ -140,8 +142,8 @@ class DBManager {
             } else {
                 return this[_getLastidNb]('users').then(lastIndex => {
                     userData.idNb = lastIndex + 1;
-                    return this.db.collection('users').add(userData)
-                        .then(ref => {return ref.id;});
+                    const {password, ...cleanedUser} = userData;
+                    return this[_createCollectionIndex](userData, cleanedUser, 'users');
                 });
             }
         });
@@ -220,7 +222,11 @@ class DBManager {
                                 tagsList: referencesTag,
                                 title: title
                             }
-                            return this.db.collection('event').add(event)
+                            let cleanedEvent = event
+                            cleanedEvent.description = description
+                            cleanedEvent.streetPlace = streetPlace
+                            cleanedEvent.city = cityPlace
+                            return this[_createCollectionIndex](event, cleanedEvent, 'event')
                                 .then(eventReference => {
                                     // crée la createdEvent pour lier créateur et événement
                                     this[_createEventCreated](referenceCreator, eventReference);
@@ -242,7 +248,8 @@ class DBManager {
             if (found) {
                 throw new Error("tag avec alias " + alias + " exist déjà")
             } else {
-                return this.db.collection('tags').add({alias: alias})
+                const tag = {alias: alias}
+                return this[_createCollectionIndex](tag, tag, 'tags')
                     .then(ref => {return ref.id;});
             }
         });
@@ -260,20 +267,31 @@ class DBManager {
         });
     }
 
-    [_createCollectionIndex](obj, collection) {
-        return this.db.collection(collection).add(obj)
+
+    [_createCollectionIndex](fullObj, safeObj, collection) {
+        return this.db.collection(collection).add(fullObj)
             .then(ref => {
-                Object.values(obj).forEach(value => {
+                Object.values(safeObj).forEach(value => {
                     let array = [];
-                    // TODO NOT PASSWORD OMG
                     if (typeof value === 'string') {
-                        value.split(/,?\s+/).forEach(s => {
-                            array.push(s);
+                        (value.split(/[\s,#]+/)).forEach(s => {
+                                if (s !== undefined) {
+                                const indexName = collection + "Index"
+                                this.db.collection(indexName).doc(s).get().then(doc => {
+                                    if (doc.exists) {
+                                        this.db.collection(indexName).doc(s).update({
+                                            listRef: FieldValue.arrayUnion(ref)
+                                        })
+                                    } else {
+                                        this.db.collection(indexName).doc(s).set({
+                                            listRef: FieldValue.arrayUnion(ref)
+                                        })
+                                    }
+                                });
+                            }
                         });
                     }
-                    this.db.collection(collection+'Index').add(s)
                 });
-                
                 return ref.id;
             });
     }
