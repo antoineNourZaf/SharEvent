@@ -16,7 +16,7 @@ class LoginForm extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    LoginForm.contextType = AuthContext;
+    
   }
 
   
@@ -28,18 +28,12 @@ class LoginForm extends Component {
   handleSubmit = (e) => {
     
     e.preventDefault();
-    const {history} = this.props;
-    props.signIn({username:this.state.username, password:this.state.password})
-    console.log(this.context);
-    alert(this.context);
+    this.props.signIn({username:this.state.username, password:this.state.password})
   }
 
-
   render() {
-    
     return (
       <div className='FormContainer'>
-      <AuthContext>   
         <Logo />
         <h3>Login</h3>
         <Form horizontal  onSubmit={this.handleSubmit}>
@@ -57,12 +51,12 @@ class LoginForm extends Component {
           <Button type="submit">Sign In!</Button>
           </Form>
         <a href='#'>Lost your password ?</a>
-        </AuthContext> 
       </div>
       
     );
   }
 }
+
 
 
 class Logo extends Component {
@@ -72,5 +66,10 @@ class Logo extends Component {
                 </div>);
     }
 }
+
+export default (props) => (
+  <AuthContext>
+  {({ signIn,state }) => <LoginForm {...props} signIn={signIn} state={state} />}
+  </AuthContext>
+)
   
-export default LoginForm;

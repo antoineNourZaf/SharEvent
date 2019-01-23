@@ -8,7 +8,6 @@ import Login from './views/login';
 import SignUp from './views/signup';
 import TitleBar from './components/TitleBar'
 import HomePage from './views/homepage';
-import Logout from './views/logout';
 import Wall from './views/wall';
 import createEvent from './views/createEvent';
 import { home } from 'react-icons-kit/ikons';
@@ -23,7 +22,6 @@ export default () => (
       <Route path="/home" component={HomePage}/>
       <Route path="/login" component={Login}/>
       <Route path="/createEvent" component={createEvent}/>
-      <Route path="/logout" component={Logout}/>
       <Route path="/profile" component={Profile}/>
     </Switch>
   </div>

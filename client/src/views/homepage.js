@@ -12,9 +12,9 @@ class HomePage extends Component {
     return (
           
       <div className="Homepage">
-        <AuthContext>
+        
         <Calendar/>
-        </AuthContext>
+        
      </div>);
       
       }
