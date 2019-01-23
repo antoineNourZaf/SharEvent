@@ -330,7 +330,6 @@ class DBManager {
         const descriptionTrimmed = tagsList[0]
         tagsList = tagsList.slice(1);
         const date = firebase.firestore.Timestamp.now();
-
         //récupérer référence du créateur (erreur s'il n'existe pas)
         let refCreator = this.getUserId(creator).then(ref => {
             return ref;
@@ -346,7 +345,7 @@ class DBManager {
         }
         let refPlace;
 
-        this[_placeExist](place).then(found => {
+        let waitRefPlace = this[_placeExist](place).then(found => {
             if (found) {
                 refPlace = this[_getPlaceRef](place).then(ref => {
                     return ref;
@@ -377,41 +376,45 @@ class DBManager {
         })
 
         //attend de récupérer toutes les références de tag
-        Promise.all(checkIfExistPromises).then(() => {
-            Promise.all(tagListPromises).then(referencesTag => {
-                //attend de récupérer la référence du lieu
-                refPlace.then(referencePlace => {
-                    //attend de récupérer la référence du createur
-                    refCreator.then(referenceCreator => {
-                        //créé l'événement
-                        this[_getLastidNb]('event').then(number => {
-                            const event = {
-                                creator: referenceCreator,
-                                date: (new Date()),
-                                dateEvent: dateEvent,
-                                descrption: descriptionTrimmed,
-                                idNb: (number + 1),
-                                placeRef: referencePlace[0],
-                                tagsList: referencesTag,
-                                title: title
-                            }
-                            let cleanedEvent = event
-                            cleanedEvent.description = description
-                            cleanedEvent.streetPlace = streetPlace
-                            cleanedEvent.city = cityPlace
-                            return this[_createCollectionIndex](event, cleanedEvent, 'event')
-                                .then(eventReference => {
-                                    //créé la notification de création d'événement
-                                    this[_createNotification](referenceCreator, 0, eventReference)
-                                    // crée la createdEvent pour lier créateur et événement
-                                    this[_createEventCreated](referenceCreator, eventReference);
-                                    referencesTag.forEach(referenceTag => {
-                                        this[_createTagRelation](referenceTag, eventReference);
+        return Promise.all(checkIfExistPromises).then(osef => {
+            return Promise.all(tagListPromises).then(referencesTag => {
+                return waitRefPlace.then(() => {
+                    //attend de récupérer la référence du lieu
+                    return refPlace.then(referencePlace => {
+                        //attend de récupérer la référence du createur
+                        return refCreator.then(referenceCreator => {
+                            //créé l'événement
+                            return this[_getLastidNb]('event').then(number => {
+                                const event = {
+                                    creator: referenceCreator,
+                                    date: (new Date()),
+                                    dateEvent: dateEvent,
+                                    descrption: descriptionTrimmed,
+                                    idNb: (number + 1),
+                                    placeRef: referencePlace[0],
+                                    tagsList: referencesTag,
+                                    title: title
+                                }
+                                let cleanedEvent = event
+                                cleanedEvent.description = description
+                                cleanedEvent.streetPlace = streetPlace
+                                cleanedEvent.city = cityPlace
+                                return this[_createCollectionIndex](event, cleanedEvent, 'event')
+                                    .then(eventReference => {
+                                        //créé la notification de création d'événement
+                                        this[_createNotification](referenceCreator, 0, eventReference)
+                                        // crée la createdEvent pour lier créateur et événement
+                                        this[_createEventCreated](referenceCreator, eventReference);
+                                        referencesTag.forEach(referenceTag => {
+                                            this[_createTagRelation](referenceTag, eventReference);
+                                        });
+                                        return eventReference;
                                     });
-                                });
-                        })
+                            })
+                        });
                     });
-                });
+                })
+                
             });
         }).catch(err => console.log(err));
     }
