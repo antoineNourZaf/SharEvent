@@ -22,7 +22,7 @@ const LoginPage = () => {
       {({ error, user, signIn }) => {
 
         if (user) {
-          return <Redirect to="/" />;
+          return <Redirect to="/home" />;
         }
 
         const onSubmit = (e) => {

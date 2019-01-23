@@ -30,14 +30,11 @@ export default function events(state = initialState, action) {
 export const loadEvents = () => {
   return async (dispatch, getState) => {
     const state = getState();
-    console.log(state);
-    if (state.news.items.length > 0) {
-      return;
-    }
+    
 
     dispatch({ type: START_LOADING });
 
-    return axios.get('A REMPLIR !!!') // Mettre ici l'url du endpoint devant retourner les events des utilisateurs suivis
+    return axios.get('/api/events/1') // Mettre ici l'url du endpoint devant retourner les events des utilisateurs suivis
       .then(response => {
         dispatch({ type: ITEMS_LOADED, items: response.data })
       });

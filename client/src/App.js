@@ -8,30 +8,23 @@ import Login from './views/login';
 import SignUp from './views/signup';
 import TitleBar from './components/TitleBar'
 import HomePage from './views/homepage';
+import Logout from './views/logout';
 import Wall from './views/wall';
-import CreateEvent from './views/createEvent';
+import createEvent from './views/createEvent';
 import { home } from 'react-icons-kit/ikons';
-
-
-
-const ProtectedRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={(params) => (
-      <AuthContext>
-        {({ user }) => user
-          ? <Component {...params} />
-          : <Redirect to="/login" />}
-      </AuthContext>
-    )}
-    />
-  )
-
-  
+import Profile from './components/Profile.js';
 
 export default () => (
+  <div className='root'>
+  <TitleBar/>
+  <VerticalBar/>
     <Switch>
-      <ProtectedRoute path="/" exact component={HomePage} />
-      <Route exact path="/login" component={Login} />
+      <Route path="/" exact component={Login} />
       <Route path="/home" component={HomePage}/>
-      
+      <Route path="/login" component={Login}/>
+      <Route path="/createEvent" component={createEvent}/>
+      <Route path="/logout" component={Logout}/>
+      <Route path="/profile" component={Profile}/>
     </Switch>
+  </div>
   );

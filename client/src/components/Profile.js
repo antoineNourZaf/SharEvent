@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
 import "./Profile.css";
-import { Card, CardImg, CardText, CardBody, Media,
-  CardTitle, CardSubtitle, Button } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, Media, CardTitle, CardSubtitle, Button } from 'reactstrap';
+import {AuthContext} from '../AuthProvider';
 
-class Profile extends Component {
-    render () {
-        return (
-            <div>
-            <Card>
-                <Media src="/test.jpg"></Media>
-            <CardImg top width="100%" src="" alt="Card image cap" />
-            <CardBody>
-                <CardTitle>John Doe</CardTitle>
-                <CardSubtitle>@ProfileName</CardSubtitle>
-                <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                <Button>Follow</Button>
-            </CardBody>
-            </Card>
-            </div>
-        );
-    }
-}
+const Profile = () => (
+  
+    <div>
+      
+      <Card>
+      <Media></Media>
+      <CardImg width="80" src="/user.png" alt="Card image cap" />
+      <CardBody>
+        <CardTitle>{AuthContext.getUser}</CardTitle>
+        <CardSubtitle></CardSubtitle>
+        <CardText></CardText>
+        <Button>Follow</Button>
+      </CardBody>
+    </Card>
+    </div>
+  
+);
 
 export default Profile;

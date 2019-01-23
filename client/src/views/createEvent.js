@@ -1,16 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import EventForm from '../components/EventForm';
 
-export default class CreateEvent extends Component {
+const createEvent = () => {
 
-  render() {
-    return (
+  return (
     <div className="createEvent">
-        <div className="create">
-          
-          <EventForm/>
-        </div>
+      <div className="create">
+        <EventForm />
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+export default createEvent;

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {Button, Form, HelpBlock, FormGroup, FormControl} from 'react-bootstrap';
+import AuthProvider, {AuthContext} from '../AuthProvider';
+import axios from 'axios';
 import './EventForm.css';
 
 export default class EventForm extends Component {
@@ -10,10 +12,11 @@ export default class EventForm extends Component {
     this.handleChange = this.handleChange.bind(this);
 
     this.state = {
-      titre: '',
-      location: '',
-      date: '',
+      title: '',
+      place: '',
+      dateEvent: '',
       description: '',
+      creator: <AuthContext>getUser</AuthContext>
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -27,20 +30,8 @@ export default class EventForm extends Component {
   /**
    *  Gère l'état du formulaire
    */
-  handleChange(e) {
-   
-    this.setState({
-      titre: e.target.titre // title ne fonctionne pas, donc je met titre --> mot reservé ??
-    });
-    this.setState({
-      location: e.target.location
-    });
-    this.setState({
-      date: e.target.date
-    });
-    this.setState({
-     description: e.target.description
-    });
+  handleChange = (event) => {
+    this.setState({[event.target.name]: event.target.value}); 
   }
 
   /*
@@ -48,7 +39,13 @@ export default class EventForm extends Component {
    */
   onSubmit = (event) => {
 
-    // Envoyer les infos de l'event au back end ici !!
+    axios.post('/api/events',  this.state )
+      .then(response => {
+        alert(response.data); // On previent que l'event a bien été généré
+      })
+      .catch(error => {
+       alert("Une erreur est survenue");
+      })
     
     event.preventDefault();
   }
@@ -58,22 +55,22 @@ export default class EventForm extends Component {
       <Form horizontal onSubmit={this.onSubmit}>
       <h2>Create your event</h2>
         <FormGroup controlId="title">
-          <FormControl type="text" value={this.state.titre} placeholder="Title" onChange={this.handleChange} required={true} />
+          <FormControl type="text" name='title' value={this.state.title} placeholder="Title" onChange={this.handleChange} required={true} />
           <FormControl.Feedback />
         </FormGroup>
         
         <FormGroup controlId="location" validationState={this.getValidationState()}>
-          <FormControl type="text" value={this.state.location} placeholder="Location" onChange={this.handleChange} required={true} />
+          <FormControl type="text" name='place' value={this.state.location} placeholder="Location" onChange={this.handleChange} required={true} />
           <FormControl.Feedback />
         </FormGroup>
         
         <FormGroup controlId="date" validationState={this.getValidationState()}>
-          <FormControl type="date" value={this.state.date} placeholder="" onChange={this.handleChange} required={true} />
+          <FormControl type="date" name='dateEvent' value={this.state.date} placeholder="" onChange={this.handleChange} required={true} />
           <FormControl.Feedback />
         </FormGroup>
         
         <FormGroup controlId="description" validationState={this.getValidationState()}>
-          <FormControl componentClass="textarea" placeholder="Your event's description" value={this.state.description} onChange={this.handleChange} required={true} />
+          <FormControl componentClass="textarea" name='description' placeholder="Your event's description" value={this.state.description} onChange={this.handleChange} required={true} />
           <FormControl.Feedback />
         </FormGroup>
         

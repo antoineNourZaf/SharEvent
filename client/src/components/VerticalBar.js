@@ -5,6 +5,7 @@ import { Icon } from "react-icons-kit";
 import { ic_home as home } from "react-icons-kit/md/ic_home";
 import {signOut} from 'react-icons-kit/fa/'
 import {user, calendar_add} from 'react-icons-kit/ikons/';
+import {Link, NavLink} from 'react-router-dom';
 
 import './VerticalBar.css';
 
@@ -13,25 +14,28 @@ class VerticalBar extends Component {
   render() {
     return(
       <div className='vertical-bar'>
-        <SideNav theme={theme} defaultSelectedPath={"home"}>
+      <SideNav theme={theme} defaultSelectedPath={"home"}>
         <Nav id="home">
           <NavIcon>
             <Icon icon={home} />
           </NavIcon>
-          Home
+          <NavLink to='/home'>Home</NavLink>
         </Nav>
+        
         <Nav id="create">
           <NavIcon>
             <Icon icon={calendar_add} />
           </NavIcon>
-         Create Event
+          <NavLink to='/createEvent'>Create Event</NavLink>
         </Nav>
+        
         <Nav id="user">
           <NavIcon>
             <Icon icon={user} />
           </NavIcon>
-          Profil
+          <NavLink to='/profile'>Profil</NavLink>
         </Nav>
+        
         <Nav id="logout">
           <NavIcon>
             <Icon icon={signOut} />

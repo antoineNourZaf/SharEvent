@@ -29,4 +29,9 @@ class EventsList extends Component {
     }
 }
 
-export default EventsList;
+export default connect(
+  state => ({
+    items: state.event.item,
+    loading: state.event.item,
+  }),
+)(FilmGrid);
