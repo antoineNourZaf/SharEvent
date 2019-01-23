@@ -44,7 +44,7 @@ Pour la base de données, nous avons choisi Firebase à partir de la recommendat
 
 
 ## Déploiement
-Le déploiement de l'application a été fait sur Heroku. Malheureusement, à cause d'un problème de parsing des fins de lignes `('\n')`, il n'est pas possible de se connecter à la base de données de Firebase. En cherchant l'erreur, on tombe sur la même manière pour corriger l'erreur, mais ne la corrige pas dans notre cas. En nous laissant un code d'erreur ressemblant dans les 2 cas, sans et avec le patch.
+Le déploiement de l'application a été fait sur Heroku. Malheureusement, à cause d'un problème de parsing des fins de lignes `('\n')`, il n'est pas possible de se connecter à la base de données de Firebase. En cherchant l'erreur, on tombe sur la même manière pour corriger l'erreur, mais ne la corrige pas dans notre cas. En nous laissant un code d'erreur ressemblant dans les 2 cas, sans et avec le patch. L'application se trouve dans le lien: https://shar-event.heroku.com/ .
 Sinon, le fonctionnement en local est correct. On arrive à communiquer avec la base de données et à récuperer/insérer des données en faisant des appels avec l'api et les bons paramètres. Si des répétitions de valeurs uniques dans la base de données, une erreur est lancée pour informer de l'erreur.
 
 Pour pouvoir utiliser l'application en local, il faut télécharger le dossier SharEventProject, aller dans ce dossier et suivre les instructions du README.md, lequel informe comment installer d'abord les dépendences et ensuite comment lancer en local l'application.
