@@ -24,10 +24,15 @@ passport.use(new LocalStrategy(
   },
   (username, password, done) => {
     // Searching username in the database
-    database.getUserById(username).then(user => {
+    database.getUserById(username)
+    .then(user => {
       if (username === user.username && password === user.password) {
         return done(null, user);
       }
+      return done(null, false);
+    })
+    .catch(err => {
+      console.log(err);
       return done(null, false);
     });
   },

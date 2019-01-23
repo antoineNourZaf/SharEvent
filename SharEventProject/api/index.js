@@ -26,8 +26,8 @@ app.listen(port, () => {
 });
 
 // const database = DBManager;
-// database.getUserById("admin").then(user => {
-//   console.log("AUTH " + user + ", " + user.password)
+// database.getEventsList(2).then(event => {
+//   console.log("EV ",event, ", " + event[0].title)
 // });
 // database.followEvent('admin', 0)
 // database.followUser('user', 'notexist')

@@ -42,7 +42,7 @@ class DBManager {
             databaseURL: 'https://sharevent-heig.firebaseio.com'
         });
         this.db = firebase.firestore();
-        this.pageLength = 1;
+        this.pageLength = 3;
     }
 
     // Public methods
@@ -452,10 +452,10 @@ class DBManager {
         }
         return this[_get](collectionRef).then(collectionList => {
             for (let i = 0; i < collectionList.length; i++) {
-                const {password, ...userCleaned} = collectionList[i];
-                collectionList[i] = userCleaned;
+                const {password, placeRef, creator, ...elementCleaned} = collectionList[i];
+                collectionList[i] = elementCleaned;
             }
-            return userList;
+            return collectionList;
         });
     }
 

@@ -35,21 +35,6 @@ class AuthProvider extends Component {
           localStorage.removeItem('token');
         })
     }
-    if (token) {
-      axios.get('/api/private', {
-        headers: {
-          Authorization: `bearer ${token}`,
-        }
-      })
-        .then(response => {
-          const { user } = response.data;
-          this.setState({ user });
-        })
-        .catch(err => {
-          console.error(err);
-          localStorage.removeItem('token');
-        })
-    }
   }
 
   signIn = ({ username, password }) => {
@@ -57,7 +42,6 @@ class AuthProvider extends Component {
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
-        console.log("LOGIN USER: ", user)
         this.setState({ user });
       })
       .catch(error => {
@@ -73,7 +57,6 @@ class AuthProvider extends Component {
 
   render() {
     const { children } = this.props
-    console.log("CHILDREN USER: ", children)
     return (
       <AuthContextProvider value={this.state}>
         {children}

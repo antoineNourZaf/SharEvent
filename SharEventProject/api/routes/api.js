@@ -48,8 +48,8 @@ router.get('/me', authenticationRequired, (req, res) => {
 // #################################################################################################
 
 // This endpoint return all the users
-router.get('/users?page=:nbPage', authenticationRequired, (req, res) => {
-  database.getUsersList(req.nbPage)
+router.get('/users?page=:nbPage', (req, res) => {
+  database.getUsers(parseInt(req.params.nbPage))
     .then(userList => {
       res.status(200).send(userList);
     })
@@ -59,10 +59,11 @@ router.get('/users?page=:nbPage', authenticationRequired, (req, res) => {
 });
 
 // This endpoint return a user by its id
-router.get('/users/:id', authenticationRequired, (req, res) => {
-  database.getUserById(req.params.id)
+router.get('/users/:username', authenticationRequired, (req, res) => {
+  database.getUserById(req.params.username)
     .then(user => {
-      res.status(200).send(user);
+      const { password, createdEvent, ...userLess } = user;
+      res.status(200).send(userLess);
     })
     .catch(err => {
       res.status(404).send(err);
@@ -70,8 +71,8 @@ router.get('/users/:id', authenticationRequired, (req, res) => {
 });
 
 // This endpoint return all the events
-router.get('/events?page=:nbPage', authenticationRequired, (req, res) => {
-  database.getEventsList(req.nbPage)
+router.get('/events?page=:nbPage', (req, res) => {
+  database.getEventsList(parseInt(req.params.nbPage))
     .then(eventList => {
       res.status(200).send(eventList);
     })
@@ -81,10 +82,11 @@ router.get('/events?page=:nbPage', authenticationRequired, (req, res) => {
 });
 
 // This endpoint return an event by its id
-router.get('/events/:id', authenticationRequired, (req, res) => {
-  database.getEventById(req.params.id)
+router.get('/events/:idNb', authenticationRequired, (req, res) => {
+  database.getEventById(parseInt(req.params.idNb))
     .then(event => {
-      res.status(200).send(event);
+      const { placeRef, creator, ...eventLess } = event
+      res.status(200).send(eventLess);
     })
     .catch(err => {
       res.status(404).send(err);
@@ -93,7 +95,7 @@ router.get('/events/:id', authenticationRequired, (req, res) => {
 
 // This endpoint return all the tags
 router.get('/tags?page=:nbPage', authenticationRequired, (req, res) => {
-  database.getTagsList(req.nbPage)
+  database.getTagsList(parseInt(req.params.nbPage))
     .then(tagList => {
       res.status(200).send(tagList);
     })
@@ -103,8 +105,8 @@ router.get('/tags?page=:nbPage', authenticationRequired, (req, res) => {
 });
 
 // This endpoint return a tag wanted
-router.get('/tags/:id', authenticationRequired, (req, res) => {
-  database.getTagById(req.params.id)
+router.get('/tags/:alias', authenticationRequired, (req, res) => {
+  database.getTagById(req.params.alias)
     .then(tag => {
       res.status(200).send(tag);
     })
@@ -114,11 +116,11 @@ router.get('/tags/:id', authenticationRequired, (req, res) => {
 });
 
 // This endpoint lets us search whatever we want
-//find({'users', 'event', 'tags'}, {{name: admin},{'chill', 'concert'},{'ch'}}, {{'place'},{'DATE'}})
-//find({'users', 'event'}, {{name: admin},{'chill', 'concert'}}, {{'place'},{'DATE'}})
+//find({'users', 'event', 'tags'}, {{name: admin}, {'chill', 'concert'})
+//find({'users', 'event'}, {{name: admin}, {'chill', 'concert'}})
 //find({'tags'}, {{'ch'}}, {alphabet})
 router.get('/search?q=:query', authenticationRequired, (req, res) => {
-  // req.params.query to have all the querry
+  // req.params.query to have all the query
   // words=bit+prog&tag=ab+cd+ef&place=1000+Lausanne&page=3
 
   // TODO split query
@@ -127,14 +129,14 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
 
   let query = req.params.query;
   
-  let splitedQuery = query.split("&"); // [words=bit+prog, tag=ab+cd+ef, place=1000+Lausanne, page=3]
+  let splitedQuery = query.split("&"); // [words=bit+prog, tag=ab+cd+ef]
   
   let splitParams = [];
   for(let i = 0; i < splitedQuery.length; ++i) {
     let temp = splitedQuery[i].split("=");
     for(let j = 0; j < temp.length; ++j) {
       splitParams.push(temp[j]);
-    } // [words, bit+prog, tag, ab+cd+ef, place, 1000+Lausanne, page, 3]
+    } // [words, bit+prog, tag, ab+cd+ef]
   }
 
   for(let k = 0; k < splitParams.length; ++k) {
@@ -152,7 +154,9 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
   }
 
   database.find(collection, infoLookingFor)
-    .then(results => res.status(200).send(results))
+    .then(results =>
+       res.status(200).send(results)
+      )
     .catch(err => {
       res.status(400).send(err);
     });
@@ -179,17 +183,18 @@ router.post('/users?user=:user', (req, res) => {
 
 // This endpoint lets us create an event
 router.post('/events?event=:event', authenticationRequired, (req, res) => {
-  let place = req.params.event.placeRef;
+  let place = req.params.event.place;
   let numberPlace = place[0];
   let streetPlace = place[1];
   let postalCodePlace = place[2];
   let cityPlace = place[3];
-  database.creatEvent(req.params.event.title,
+  database.createEvent(req.params.event.title,
              req.params.event.creator,
              req.params.event.description,
-             numberPlace,
+             req.params.event.dateEvent,
+             parseInt(numberPlace),
              streetPlace,
-             postalCodePlace,
+             parseInt(postalCodePlace),
              cityPlace)
              .then(id => {
               if(id) {
@@ -204,6 +209,7 @@ router.post('/events?event=:event', authenticationRequired, (req, res) => {
 });
 
 // This endpoint lets us follow another user
+// id -> your ID, username -> the user you will follow
 router.post('/users/user/:id?username=:username', authenticationRequired, (req, res) => {
   database.followUser(req.params.username, req.params.id)
     .then(username =>
@@ -215,10 +221,23 @@ router.post('/users/user/:id?username=:username', authenticationRequired, (req, 
 });
 
 // This endpoint lets us follow an event
+// id -> your event to be followed, username -> the user that will follow your event
 router.post('/events/event/:id?username=:username', authenticationRequired, (req, res) => {
-  database.followUser(req.params.username, req.params.id)
+  database.followEvent(req.params.username, req.params.id)
     .then(event =>
       res.status(201).send("You correctly followed the event " + event)
+    )
+    .catch(err => {
+      res.status(400).send(err);
+    });;
+});
+
+// This endpoint will return the notification if a new thing is done
+// username -> yourself, trying to have your notifications
+router.post('/notification?username=:username', authenticationRequired, (req, res) => {
+  database.getNotification(req.params.username)
+    .then(notification =>
+      res.status(201).send(notification)
     )
     .catch(err => {
       res.status(400).send(err);
