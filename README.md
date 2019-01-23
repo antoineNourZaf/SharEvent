@@ -2,7 +2,7 @@
 
 ## Intro
 Nous avons créé une application qui permet aux utilisateurs de créer de événements pour les partager et inviter des gens à y participer. Le principe est de créer un événement auquel tout le monde aura accès, et si l'on veut avoir des notifications d'une personne et savoir si elle fera d'autres événements, on pourra "follow" cette personne (la suivre), et connaître ses prochains événements.
-Pour pouvoir utiliser l'application, il faut d'abord registrer un compte avec un nom d'utilisateur unique et un mot de pass (avec aussi un nom, prenom et email de votre compte).
+Pour pouvoir utiliser l'application, il faut d'abord registrer un compte avec un nom d'utilisateur unique et un mot de pass (avec aussi un nom, prenom et email pour votre compte).
 
 ### FrontEnd
 
@@ -24,11 +24,11 @@ Pour pouvoir utiliser l'application, il faut d'abord registrer un compte avec un
 | Endpoint                       																					| Type Request | Description                                 	 |
 | ----------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------- |
 | `/api/users?page=:nbPage` 	           							      											| `GET`        | Retourne tous les users                     	 |
-| `/api/users/:username`              																				| `GET`        | Retourne le user n°{id}                     	 |
+| `/api/users/:username`              																				| `GET`        | Retourne le user avec username cherché        	 |
 | `/api/events?page=:nbPage`                  																		| `GET`        | Retourne tous les events                    	 |
-| `/api/events/:id`             																					| `GET`        | Retourne le user n°{id}                     	 |
+| `/api/events/:id`             																					| `GET`        | Retourne l'event n°{id}                     	 |
 | `/api/tags?page=:nbPage`                    																		| `GET`        | Retourne tous les tags                      	 |
-| `/api/tags/:alias`              																					| `GET`        | Retourne le tag n°{id}                      	 |
+| `/api/tags/:alias`              																					| `GET`        | Retourne le tag avec l'alias cherché          	 |
 | `/api/search/:query`        																						| `GET`        | Permet de chercher parmi tout ce qui existe 	 |
 | `/api/users/user/:lastname/:firstname/:email/:username/:password`       											| `POST`       | Crée un créateur 							 	 |
 | `/api/events/event/:title/:creator/:description/:dateEvent/:numberPlace/:streetPlace/:postalCodePlace/:cityPlace`	| `POST`       | Crée un événement 						     	 |
@@ -41,6 +41,7 @@ Nous avons choisi de faire une API REST pour travailler avec Firebase. L'utilisa
 Pour la base de données, nous avons choisi Firebase à partir de la recommendation du professeur de TWEB et par la contrainte de la donnée de devoir utiliser une base de donnée NoSQL (et le fait de ne pas avoir tout le monde qui utilise la même base de donnée NoSQL)
 
 ## Requêtes/données
+
 
 ## Déploiement
 Le déploiement de l'application a été fait sur Heroku. Malheureusement, à cause d'un problème de parsing des fins de lignes `('\n')`, il n'est pas possible de se connecter à la base de données de Firebase. En cherchant l'erreur, on tombe sur la même manière pour corriger l'erreur, mais ne la corrige pas dans notre cas. En nous laissant un code d'erreur ressemblant dans les 2 cas, sans et avec le patch.

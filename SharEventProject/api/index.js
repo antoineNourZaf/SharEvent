@@ -26,11 +26,3 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Magic happens at http://localhost:${port}`);
 });
-
-// const database = DBManager;
-// database.getEventsList(2).then(event => {
-//   console.log("EV ",event, ", " + event[0].title)
-// });
-// database.followEvent('admin', 0)
-// database.followUser('user', 'notexist')
-// database.find(['users', 'event'], ['email', 'renens']).then(result => console.log(result['users'][0]));
