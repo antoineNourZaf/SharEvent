@@ -1,0 +1,23 @@
+form{
+  border-radius:25%;
+  display: inline-block;
+  background: orange;
+  margin-top:10%;
+  margin-left:40%;
+  padding-left:5%;
+  padding-bottom: 2%;
+  width:15%;
+  max-width: 500px;
+  box-sizing: content-box;
+}
+textarea {
+  background:orange;
+  color: white;
+  border: 2px solid white;
+  resize: none;
+}
+input{
+  min-width: 25%;
+  
+  box-sizing: border-box;
+}

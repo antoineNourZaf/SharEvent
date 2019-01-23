@@ -1,0 +1,17 @@
+
+.Events-ListItem {
+    padding: 0 24px;
+  }
+  
+  .Events-ListItem h3 {
+    margin-bottom: 4px;
+    color: black;
+  }
+  
+  .Events-ListItem a {
+    text-decoration: none;
+  }
+  
+  .Events-ListItem-secondary {
+    color: rgba(0,0,0, .54);
+  }

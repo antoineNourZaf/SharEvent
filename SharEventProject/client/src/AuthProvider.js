@@ -38,11 +38,13 @@ class AuthProvider extends Component {
   }
 
   signIn = ({ username, password }) => {
+    // Implement me !
     axios.post('/auth/login', { username, password })
       .then(response => {
         const { user, token } = response.data;
         window.localStorage.setItem('token', token);
         this.setState({ user });
+        
       })
       .catch(error => {
         console.error(error);
@@ -51,6 +53,7 @@ class AuthProvider extends Component {
   }
 
   signOut = () => {
+    // Implement me !
     localStorage.removeItem('token');
     window.location.reload();
   }

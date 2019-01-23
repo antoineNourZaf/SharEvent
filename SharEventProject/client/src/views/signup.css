@@ -1,0 +1,16 @@
+.SignUp {
+  border-radius:25%;
+  display: inline-block;
+  background: orange;
+  margin-top:10%;
+  margin-left:40%;
+  padding-left:5%;
+  padding-bottom: 2%;
+  width:15%;
+  max-width: 500px;
+  box-sizing: content-box;
+}
+
+h2{
+  color:white;
+}

@@ -1,76 +1,28 @@
-import React, { useState } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { AuthContext } from './AuthProvider';
-
-const HomePage = () => (
-  <AuthContext>
-    {({ signOut }) => (
-      <div>
-        <h1>Welcome !</h1>
-        <button onClick={signOut}>LOGOUT</button>
-      </div>
-    )}
-  </AuthContext>
-);
-
-const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  return (
-    <AuthContext>
-      {({ error, user, signIn }) => {
-        if (user) {
-          return <Redirect to="/" />;
-        }
-
-        const onSubmit = (e) => {
-          e.preventDefault();
-          signIn({ username, password });
-        };
-
-        return (
-          <div>
-            <h1>Login</h1>
-            <form onSubmit={onSubmit}>
-              <input
-                type="text"
-                placeholder="username"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-              />
-              <br />
-              <input
-                type="password"
-                placeholder="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-              />
-              <br />
-              <button type="submit">LOGIN</button>
-              <p style={{ color: 'red' }}>{error}</p>
-            </form>
-          </div>
-        )
-      }}
-    </AuthContext>
-  )
-}
-
-const ProtectedRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={(params) => (
-    <AuthContext>
-      {({ user }) => user
-        ? <Component {...params} />
-        : <Redirect to="/login" />}
-    </AuthContext>
-  )}
-  />
-)
+import React, { Component } from 'react';
+import './App.css';
+import AuthContext from './AuthProvider'
+import { BrowserRouter, Route, Link, Redirect,Switch } from "react-router-dom";
+import VerticalBar from './components/VerticalBar.js';
+import Calendar from 'react-calendar';
+import Login from './views/login';
+import SignUp from './views/signup';
+import TitleBar from './components/TitleBar'
+import HomePage from './views/homepage';
+import Wall from './views/wall';
+import createEvent from './views/createEvent';
+import { home } from 'react-icons-kit/ikons';
+import Profile from './components/Profile.js';
 
 export default () => (
-  <Switch>
-    <ProtectedRoute path="/" exact component={HomePage} />
-    <Route path="/login" component={LoginPage} />
-  </Switch>
-);
+  <div className='root'>
+  <TitleBar/>
+  <VerticalBar/>
+    <Switch>
+      <Route path="/" exact component={Login} />
+      <Route path="/home" component={HomePage}/>
+      <Route path="/login" component={Login}/>
+      <Route path="/createEvent" component={createEvent}/>
+      <Route path="/profile" component={Profile}/>
+    </Switch>
+  </div>
+  );
