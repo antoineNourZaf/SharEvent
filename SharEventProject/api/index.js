@@ -24,7 +24,3 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Magic happens at http://localhost:${port}`);
 });
-
-// Data base init and usage
-const database = new DBManager();
-database.find(['users', 'event'], ['email', 'renens']).then(result => console.log(result['users'][0]));
