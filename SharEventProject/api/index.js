@@ -25,11 +25,21 @@ app.listen(port, () => {
   console.log(`Magic happens at http://localhost:${port}`);
 });
 
-// const database = DBManager;
+const database = DBManager;
 // database.getEventsList(2).then(event => {
 //   console.log("EV ",event, ", " + event[0].title)
 // });
 // database.followEvent('admin', 0)
 // database.followUser('user', 'notexist')
-
+// database.createEvent("a", "asdf", "c", "d", 0 , "f", 1, "h")
+//                     .then(id => {
+//                       if(id) {
+//                         res.status(201).send("Event created successfuly" + id);
+//                       }else {
+//                         throw Error("ID IS EMPTY!");
+//                       }
+//                     })
+//                     .catch(err => {
+//                       res.status(400).send(err);
+                    // });
 // database.find(['users', 'event'], ['email', 'renens']).then(result => console.log(result['users'][0]));

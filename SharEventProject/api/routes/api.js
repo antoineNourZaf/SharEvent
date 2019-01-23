@@ -48,7 +48,7 @@ router.get('/me', authenticationRequired, (req, res) => {
 // #################################################################################################
 
 // This endpoint return all the users
-router.get('/users?page=:nbPage', (req, res) => {
+router.get('/users?page=:nbPage', authenticationRequired, (req, res) => {
   database.getUsers(parseInt(req.params.nbPage))
     .then(userList => {
       res.status(200).send(userList);
@@ -71,7 +71,7 @@ router.get('/users/:username', authenticationRequired, (req, res) => {
 });
 
 // This endpoint return all the events
-router.get('/events?page=:nbPage', (req, res) => {
+router.get('/events?page=:nbPage', authenticationRequired, (req, res) => {
   database.getEventsList(parseInt(req.params.nbPage))
     .then(eventList => {
       res.status(200).send(eventList);
@@ -119,11 +119,10 @@ router.get('/tags/:alias', authenticationRequired, (req, res) => {
 //find({'users', 'event', 'tags'}, {{name: admin}, {'chill', 'concert'})
 //find({'users', 'event'}, {{name: admin}, {'chill', 'concert'}})
 //find({'tags'}, {{'ch'}}, {alphabet})
-router.get('/search?q=:query', authenticationRequired, (req, res) => {
+router.get('/search/:query', authenticationRequired, (req, res) => {
   // req.params.query to have all the query
-  // words=bit+prog&tag=ab+cd+ef&place=1000+Lausanne&page=3
-
-  // TODO split query
+  // words=bit+prog&tag=ab+cd+ef
+  
   let collection = [];
   let infoLookingFor = [];
 
@@ -141,77 +140,97 @@ router.get('/search?q=:query', authenticationRequired, (req, res) => {
 
   for(let k = 0; k < splitParams.length; ++k) {
     if(splitParams[k] == "words") {
-        document.write("WORDS ");
         collection[0] = 'users';
         collection[1] = 'event';
-        infoLookingFor[0] = splitParams[++k].split("+");
+        let temp2 = splitParams[++k].split("+"); // [words, [bit, prog], tag, [ab,cd,ef]]
+        for(let l = 0; l < temp2.length; ++l) {
+          infoLookingFor.push(temp2[l]);
+        }
     }
     if(splitParams[k] == "tag") {
-        document.write("TAG ");
         collection[2] = 'tags';
-        infoLookingFor[1] = splitParams[++k].split("+");
+        let temp3 = splitParams[++k].split("+");
+        for(let m = 0; m < temp3.length; ++m) {
+          infoLookingFor.push(temp3[m]);
+        }
     }
   }
 
   database.find(collection, infoLookingFor)
-    .then(results =>
-       res.status(200).send(results)
-      )
+    .then(results => {
+        const { placeRef, creator, tagsList, ...resultsLess } = results
+       res.status(200).send(resultsLess)
+      })
     .catch(err => {
       res.status(400).send(err);
     });
 });
 
 // This endpoint lets us create a user
-router.post('/users?user=:user', (req, res) => {
-  database.createUser(req.params.user.lastname,
-             req.params.user.firstname,
-             req.params.user.email,
-             req.params.user.username,
-             req.params.user.password)
-              .then(id => {
-                if(id) {
-                  res.status(201).send("User created successfuly");
-                }else {
-                  throw Error("ID IS EMPTY!");
-                }
-              })
-              .catch(err => {
-                res.status(400).send(err);
-              });
+// http://localhost:5000/api/users/user/ashk/kajs/jas@jksd/asdf/asdf
+router.post('/users/user/:lastname/:firstname/:email/:username/:password', (req, res) => {
+  
+  database.createUser(req.params.lastname, //lastname
+                      req.params.firstname, //title
+                      req.params.email, //title
+                      req.params.username, //title
+                      req.params.password)
+                      .then(id => {
+                        if(id) {
+                          res.status(201).send("User created successfuly");
+                        }else {
+                          throw Error("ID IS EMPTY!");
+                        }
+                      })
+                      .catch(err => {
+                        res.status(400).send(err);
+                      });
 });
 
 // This endpoint lets us create an event
-router.post('/events?event=:event', authenticationRequired, (req, res) => {
-  let place = req.params.event.place;
-  let numberPlace = place[0];
-  let streetPlace = place[1];
-  let postalCodePlace = place[2];
-  let cityPlace = place[3];
-  database.createEvent(req.params.event.title,
-             req.params.event.creator,
-             req.params.event.description,
-             req.params.event.dateEvent,
-             parseInt(numberPlace),
-             streetPlace,
-             parseInt(postalCodePlace),
-             cityPlace)
-             .then(id => {
-              if(id) {
-                res.status(201).send("Event created successfuly" + id);
-              }else {
-                throw Error("ID IS EMPTY!");
-              }
-            })
-            .catch(err => {
-              res.status(400).send(err);
-            });
+// http://localhost:5000/api/events/event/qwe/asdf/asdfghjkl%23bit/1.1.1/1234/street/012/place
+router.post('/events/event/:title/:creator/:description/:dateEvent/:numberPlace/:streetPlace/:postalCodePlace/:cityPlace',
+  (req, res) => {
+  // let event = req.params.event;
+
+  // let splitedEvent = event.split("&");
+  
+  // let splitParams = [];
+  // for(let i = 0; i < splitedEvent.length; ++i) {
+  //   let temp = splitedEvent[i].split("=");
+  //   for(let j = 0; j < temp.length; ++j) {
+  //     splitParams.push(temp[j]);
+  //   }
+  // }
+console.log("YOLO",req.params.description)
+  // let numberPlace = splitParams[9];
+  // let streetPlace = splitParams[11];
+  // let postalCodePlace = splitParams[13];
+  // let cityPlace = splitParams[15];
+  database.createEvent(req.params.title, //title
+                      req.params.creator, //creator
+                      req.params.description, //description
+                      req.params.dateEvent, //dateEvent
+                      parseInt(req.params.numberPlace), //numberPlace
+                      req.params.streetPlace, //streetPlace
+                      parseInt(req.params.postalCodePlace), //postalCodePlace
+                      req.params.cityPlace) //cityPlace
+                      .then(id => {
+                        if(id) {
+                          res.status(201).send("Event created successfuly" + id);
+                        }else {
+                          throw Error("ID IS EMPTY!");
+                        }
+                      })
+                      .catch(err => {
+                        res.status(400).send(err);
+                      });
 });
 
 // This endpoint lets us follow another user
-// id -> your ID, username -> the user you will follow
-router.post('/users/user/:id?username=:username', authenticationRequired, (req, res) => {
-  database.followUser(req.params.username, req.params.id)
+// id -> your username, username -> the user you will follow
+router.post('/users/:idUsername/user/:username', authenticationRequired, (req, res) => {
+  database.followUser(req.params.idUsername, req.params.username)
     .then(username =>
       res.status(201).send("You correctly followed the user " + username)
     )
@@ -222,7 +241,7 @@ router.post('/users/user/:id?username=:username', authenticationRequired, (req, 
 
 // This endpoint lets us follow an event
 // id -> your event to be followed, username -> the user that will follow your event
-router.post('/events/event/:id?username=:username', authenticationRequired, (req, res) => {
+router.post('/events/:id/event/:username', authenticationRequired, (req, res) => {
   database.followEvent(req.params.username, req.params.id)
     .then(event =>
       res.status(201).send("You correctly followed the event " + event)
@@ -234,8 +253,8 @@ router.post('/events/event/:id?username=:username', authenticationRequired, (req
 
 // This endpoint will return the notification if a new thing is done
 // username -> yourself, trying to have your notifications
-router.post('/notification?username=:username', authenticationRequired, (req, res) => {
-  database.getNotification(req.params.username)
+router.post('/notification/:username', authenticationRequired, (req, res) => {
+  database.getNotifications(req.params.username)
     .then(notification =>
       res.status(201).send(notification)
     )
