@@ -64,6 +64,9 @@ passport.use(new JWTStrategy(
   },
 ));
 
+/**
+ * Endpoint to login the current user
+ */
 router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
   const { password, createdEvent, ...user } = req.user;
   const token = jwt.sign({ userId: user.username }, jwtOptions.secret);

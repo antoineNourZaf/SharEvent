@@ -29,7 +29,7 @@ cd ./api && yarn install
 cd ./client && yarn install
 ```
 
-2. Set local environment configuration in a `.env ` file.
+2. Set local environment configuration in a `.env ` file. You have .env.example as an exemple of what to insert. For the Firebase credentials, go to the Firebase web page that explains where to download the document .json with the credentials for the connection with a Firebase database. You have to create your own to use the project in local.
 
 ### Run the App
 

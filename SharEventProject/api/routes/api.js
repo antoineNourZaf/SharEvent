@@ -128,8 +128,10 @@ router.get('/search/:query', authenticationRequired, (req, res) => {
 
   let query = req.params.query;
   
+  // We split first the wery to separate each element of arrays for the =
   let splitedQuery = query.split("&"); // [words=bit+prog, tag=ab+cd+ef]
   
+  // Then we split it again to have the values of the array's elements (words/tags)
   let splitParams = [];
   for(let i = 0; i < splitedQuery.length; ++i) {
     let temp = splitedQuery[i].split("=");
@@ -138,6 +140,7 @@ router.get('/search/:query', authenticationRequired, (req, res) => {
     } // [words, bit+prog, tag, ab+cd+ef]
   }
 
+  // At the end, we separate the values to have them in the same array and we put in collection what we wanna search
   for(let k = 0; k < splitParams.length; ++k) {
     if(splitParams[k] == "words") {
         collection[0] = 'users';
@@ -170,10 +173,10 @@ router.get('/search/:query', authenticationRequired, (req, res) => {
 // http://localhost:5000/api/users/user/ashk/kajs/jas@jksd/asdf/asdf
 router.post('/users/user/:lastname/:firstname/:email/:username/:password', (req, res) => {
   
-  database.createUser(req.params.lastname, //lastname
-                      req.params.firstname, //title
-                      req.params.email, //title
-                      req.params.username, //title
+  database.createUser(req.params.lastname,
+                      req.params.firstname,
+                      req.params.email,
+                      req.params.username,
                       req.params.password)
                       .then(id => {
                         if(id) {
@@ -191,33 +194,18 @@ router.post('/users/user/:lastname/:firstname/:email/:username/:password', (req,
 // http://localhost:5000/api/events/event/qwe/asdf/asdfghjkl%23bit/1.1.1/1234/street/012/place
 router.post('/events/event/:title/:creator/:description/:dateEvent/:numberPlace/:streetPlace/:postalCodePlace/:cityPlace',
   (req, res) => {
-  // let event = req.params.event;
 
-  // let splitedEvent = event.split("&");
-  
-  // let splitParams = [];
-  // for(let i = 0; i < splitedEvent.length; ++i) {
-  //   let temp = splitedEvent[i].split("=");
-  //   for(let j = 0; j < temp.length; ++j) {
-  //     splitParams.push(temp[j]);
-  //   }
-  // }
-console.log("YOLO",req.params.description)
-  // let numberPlace = splitParams[9];
-  // let streetPlace = splitParams[11];
-  // let postalCodePlace = splitParams[13];
-  // let cityPlace = splitParams[15];
-  database.createEvent(req.params.title, //title
-                      req.params.creator, //creator
-                      req.params.description, //description
-                      req.params.dateEvent, //dateEvent
-                      parseInt(req.params.numberPlace), //numberPlace
-                      req.params.streetPlace, //streetPlace
-                      parseInt(req.params.postalCodePlace), //postalCodePlace
-                      req.params.cityPlace) //cityPlace
+  database.createEvent(req.params.title,
+                      req.params.creator,
+                      req.params.description,
+                      req.params.dateEvent,
+                      parseInt(req.params.numberPlace),
+                      req.params.streetPlace,
+                      parseInt(req.params.postalCodePlace),
+                      req.params.cityPlace)
                       .then(id => {
                         if(id) {
-                          res.status(201).send("Event created successfuly" + id);
+                          res.status(201).send("Event created successfuly " + id);
                         }else {
                           throw Error("ID IS EMPTY!");
                         }
@@ -253,7 +241,7 @@ router.post('/events/:id/event/:username', authenticationRequired, (req, res) =>
 
 // This endpoint will return the notification if a new thing is done
 // username -> yourself, trying to have your notifications
-router.post('/notification/:username', authenticationRequired, (req, res) => {
+router.post('/notifications/:username', authenticationRequired, (req, res) => {
   database.getNotifications(req.params.username)
     .then(notification =>
       res.status(201).send(notification)
