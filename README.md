@@ -17,7 +17,7 @@ Pour pouvoir utiliser l'application, il faut d'abord enregistrer un compte avec 
 
 ### Backend (Endpoints)
 
-| Endpoint                       																					| Type Request | Description                                 	 |
+| Endpoint
 | ----------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------- |
 | `/api/users?page=:nbPage` 	       | `GET`        | Retourne tous les users                     	 |
 | `/api/users/:username`              	| `GET`        | Retourne le user avec username cherché        	 |
@@ -31,7 +31,6 @@ Pour pouvoir utiliser l'application, il faut d'abord enregistrer un compte avec 
 | `/api/users/:idUsername/user/:username`    																		| `POST`       | Un utilisateur peut suivre un autre utilisateur |
 | `/api/events/:id/event/:username`    																				| `POST`       | Un utilisateur peut suivre un événement 	 	 |
 | `/api/notifications/:username'`    																				| `GET`        | Obtient les notifications de l'utilisateur	 	 |
-
 ## API/Database
 Nous avons choisi de faire une API REST pour travailler avec FireStore. L'utilisation était plus simple que de devoir comprendre et utiliser GrapheQL depuis le début car on avait déjà utilisé ce type d'API auparavant. 
 Pour la base de données, nous avons choisi Firebase à partir de la recommendation du professeur de TWEB et par la contrainte de la donnée de devoir utiliser une base de donnée NoSQL (et le fait de ne pas avoir tout le monde qui utilise la même base de donnée NoSQL)
