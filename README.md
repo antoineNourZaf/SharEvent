@@ -19,13 +19,13 @@ Pour pouvoir utiliser l'application, il faut d'abord enregistrer un compte avec 
 
 | Endpoint                       																					| Type Request | Description                                 	 |
 | ----------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------- |
-| `/api/users?page=:nbPage` 	           							      											| `GET`        | Retourne tous les users                     	 |
-| `/api/users/:username`              																				| `GET`        | Retourne le user avec username cherché        	 |
-| `/api/events?page=:nbPage`                  																		| `GET`        | Retourne tous les events                    	 |
-| `/api/events/:id`             																					| `GET`        | Retourne l'event n°{id}                     	 |
-| `/api/tags?page=:nbPage`                    																		| `GET`        | Retourne tous les tags                      	 |
-| `/api/tags/:alias`              																					| `GET`        | Retourne le tag avec l'alias cherché          	 |
-| `/api/search/:query`        																						| `GET`        | Permet de chercher parmi tout ce qui existe 	 |
+| `/api/users?page=:nbPage` 	       | `GET`        | Retourne tous les users                     	 |
+| `/api/users/:username`              	| `GET`        | Retourne le user avec username cherché        	 |
+| `/api/events?page=:nbPage`          	| `GET`        | Retourne tous les events                    	 |
+| `/api/events/:id`             		| `GET`        | Retourne l'event n°{id}                     	 |
+| `/api/tags?page=:nbPage`          	| `GET`        | Retourne tous les tags                      	 |
+| `/api/tags/:alias`              		| `GET`        | Retourne le tag avec l'alias cherché          	 |
+| `/api/search/:query`        			| `GET`        | Permet de chercher parmi tout ce qui existe 	 |
 | `/api/users/user/:lastname/:firstname/:email/:username/:password`       											| `POST`       | Crée un créateur 							 	 |
 | `/api/events/event/:title/:creator/:description/:dateEvent/:numberPlace/:streetPlace/:postalCodePlace/:cityPlace`	| `POST`       | Crée un événement 						     	 |
 | `/api/users/:idUsername/user/:username`    																		| `POST`       | Un utilisateur peut suivre un autre utilisateur |
